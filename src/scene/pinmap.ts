@@ -210,8 +210,11 @@ export class PinMap {
 
   resetView() {
     this.flight = null;
-    this.focus.set(5, 0, 30);
-    this.camDist = 760;
+    this.focus.set(5, 0, 10);
+    // Tall phone screens: pull back and shift the model left/up, clear of the notebook and the commit button.
+    const tall = this.camera.aspect < 0.75;
+    if (tall) this.focus.set(-10, 0, 40);
+    this.camDist = tall ? 980 : 760;
     this.camPitch = 1.06;
     this.camYaw = 0;
     this.pin.visible = false;
@@ -370,6 +373,6 @@ export class PinMap {
 
   zoom(delta: number) {
     if (this.flying) return;
-    this.camDist = THREE.MathUtils.clamp(this.camDist * (1 + delta * 0.0012), 70, 950);
+    this.camDist = THREE.MathUtils.clamp(this.camDist * (1 + delta * 0.0012), 70, 1100);
   }
 }

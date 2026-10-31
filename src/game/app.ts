@@ -510,7 +510,7 @@ export class App {
       <div class="title-pill"><div>${esc(s.def.titleHe)}<div class="sub">גלויה <bdi>${s.idx + 1}/${s.def.postcards.length}</bdi></div></div></div>
       <div class="tip paper">לחצו על המפה כדי לנעוץ סיכה. גררו להזזה, גלגלו להתקרבות. ${late}</div>
       <div class="compass paper"><div class="arrow">↑</div>צפון</div>
-      <div class="notebook" style="top:auto;bottom:90px"><h3>מה ראינו</h3><ul></ul></div>
+      <div class="notebook mapnb"><h3>מה ראינו</h3><ul></ul></div>
       <button class="btn back" data-act="back">« חזרה לגלויה</button>
       <button class="btn commit" data-act="commit" ${pin ? '' : 'disabled'}>📍 נועצים כאן!</button></div>`;
     this.renderNotebook();

@@ -432,8 +432,9 @@ bdi,
 .maphud .commit {
   position: absolute;
   bottom: clamp(14px, 2.6vmin, 28px);
-  left: 50%;
-  transform: translateX(-50%);
+  /* Beside the model, not on it: Eilat must stay clickable. */
+  left: clamp(14px, 2.6vmin, 28px);
+  bottom: calc(clamp(14px, 2.6vmin, 28px) + 64px);
   font-size: clamp(18px, 3.2vmin, 32px);
   padding: 12px 36px;
 }
@@ -446,7 +447,8 @@ bdi,
 }
 .maphud .tip {
   position: absolute;
-  top: clamp(70px, 12vmin, 110px);
+  pointer-events: none; /* never swallow a pin on the far north */
+  top: clamp(14px, 2.6vmin, 28px);
   left: 50%;
   transform: translateX(-50%);
   padding: 8px 16px;
@@ -829,6 +831,11 @@ body.reduced * {
   animation-duration: 0.01s !important;
   transition-duration: 0.01s !important;
 }
+/* The map's evidence list sits low on the right, clear of the title. */
+.notebook.mapnb {
+  top: auto;
+  bottom: 90px;
+}
 /* Lamp-lit tabletop: darken the table toward the corners so the relief model holds the eye. */
 .maphud::before {
   content: '';
@@ -880,5 +887,37 @@ body.reduced * {
   .notebook {
     width: 60vw;
     bottom: calc(68px + 70px);
+  }
+}
+@media (max-width: 520px) {
+  .maphud .tip {
+    top: 76px;
+    max-width: 94%;
+  }
+  .maphud .compass {
+    top: 128px;
+  }
+  /* The evidence list folds away on the map so the whole country stays tappable. */
+  .maphud .notebook.mapnb {
+    top: 128px;
+    bottom: auto;
+    right: 6px;
+    width: 44vw;
+    max-height: 22vh;
+  }
+}
+@media (max-width: 520px) {
+  .maphud .commit {
+    left: auto;
+    right: 6px;
+    bottom: 14px;
+    font-size: 18px;
+    padding: 10px 18px;
+  }
+  .maphud .notebook.mapnb {
+    top: auto;
+    bottom: 76px;
+    width: 40vw;
+    max-height: 18vh;
   }
 }
