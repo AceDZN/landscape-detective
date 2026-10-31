@@ -38,7 +38,7 @@ export class PinMap {
   camDist = 520;
   camPitch = 1.05;
   camYaw = 0;
-  private flight: { from: THREE.Vector3; to: THREE.Vector3; d0: number; d1: number; t: number; dur: number } | null = null;
+  private flight: { from: THREE.Vector3; to: THREE.Vector3; d0: number; d1: number; p0: number; p1: number; t: number; dur: number } | null = null;
   private time = 0;
   readonly cityDots = new THREE.Group();
   private ripple: THREE.Mesh;
@@ -93,7 +93,7 @@ export class PinMap {
     this.scene.add(plinth);
     // Compass rose: north is always up.
     const n = this.label('N ↑', 0x2f4a2f);
-    n.position.set(bb.max.x - 25, 2, bb.min.z + 30);
+    n.position.set(bb.min.x + 30, 2, bb.min.z + 22); // over the sea corner, never on a reveal zone
     n.scale.set(40, 20, 1);
     this.scene.add(n);
 
@@ -210,9 +210,9 @@ export class PinMap {
 
   resetView() {
     this.flight = null;
-    this.focus.set(5, 0, 25);
-    this.camDist = 820;
-    this.camPitch = 1.12;
+    this.focus.set(5, 0, 30);
+    this.camDist = 760;
+    this.camPitch = 1.06;
     this.camYaw = 0;
     this.pin.visible = false;
     this.pinPlaced = false;
@@ -297,7 +297,9 @@ export class PinMap {
     this.arc.userData.t = 0;
     this.scene.add(this.arc);
     const startD = this.camDist;
-    this.flight = { from: this.focus.clone(), to: t.clone(), d0: startD, d1: Math.max(200, Math.min(420, len * 2.2 + 170)), t: 0, dur };
+    // Near the north edge a low camera would look past the model at bare table: stay steeper there.
+    const p1 = t.z < -150 ? 1.12 : 0.9;
+    this.flight = { from: this.focus.clone(), to: t.clone(), d0: startD, d1: Math.max(200, Math.min(420, len * 2.2 + 170)), p0: this.camPitch, p1, t: 0, dur };
     // Ibex on a ridge near the truth: close pins catch it, far pins let it laugh further away.
     const off = new THREE.Vector3(6 + gap * 9, 0, -4 - gap * 6);
     const ip = t.clone().add(off);
@@ -335,7 +337,7 @@ export class PinMap {
       const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
       this.focus.lerpVectors(f.from, f.to, e);
       this.camDist = THREE.MathUtils.lerp(f.d0, f.d1, e) + Math.sin(k * Math.PI) * 60;
-      this.camPitch = THREE.MathUtils.lerp(1.12, 0.78, e);
+      this.camPitch = THREE.MathUtils.lerp(f.p0, f.p1, e);
       if (this.arc) {
         const n = Math.floor(81 * Math.min(1, k * 1.6));
         this.arc.geometry.setDrawRange(0, n);

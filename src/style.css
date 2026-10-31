@@ -829,3 +829,11 @@ body.reduced * {
   animation-duration: 0.01s !important;
   transition-duration: 0.01s !important;
 }
+/* Lamp-lit tabletop: darken the table toward the corners so the relief model holds the eye. */
+.maphud::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 60% 75% at 50% 48%, transparent 55%, rgba(18, 10, 4, 0.55) 100%);
+}
