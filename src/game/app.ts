@@ -53,6 +53,7 @@ export class App {
   world: PostcardWorld | null = null;
   explorer: Explorer | null = null;
   paused = false;
+  private pauseEl: HTMLElement | null = null;
   reduced = false;
   time = 0;
   private lastReveal: PinResult | null = null;
@@ -215,7 +216,7 @@ export class App {
       <div class="pages">${pages}</div>
       <div class="album-foot">
         <button class="btn" data-act="play">▶ שחק</button>
-        <p style="color:#f3e6c8;margin:0;align-self:center;font-size:clamp(12px,1.8vmin,16px);max-width:52ch">יעלי היעלה גנבה את אלבום הגלויות של רשות הטבע. כל גלויה היא מקום אמיתי בישראל — אספו ראיות ונעצו סיכה.</p>
+        <p class="blurb">יעלי היעלה גנבה את אלבום הגלויות של רשות הטבע. כל גלויה היא מקום אמיתי בישראל — אספו ראיות ונעצו סיכה.</p>
         <button class="btn" data-act="daily">📅 תיק יומי ${daily ? `<span class="stars">${this.starsHtml(daily.stars)}</span>` : ''}</button>
       </div></div>`;
     this.overlay.querySelectorAll<HTMLButtonElement>('.slot').forEach((b) => b.addEventListener('click', () => this.openIntro(CASES.find((c) => c.id === Number(b.dataset.case))!)));
@@ -229,6 +230,7 @@ export class App {
       (e.currentTarget as HTMLElement).textContent = this.sfx.muted ? '🔇' : '🔊';
     });
     this.overlay.querySelector('[data-act=settings]')!.addEventListener('click', () => this.pause(true, true));
+    this.overlay.querySelector<HTMLButtonElement>('.slot.next, [data-act=play]')?.focus();
   }
 
   private thumbStyle(c: CaseDef) {
@@ -267,6 +269,7 @@ export class App {
       <div class="row"><button class="btn" data-act="go">יוצאים לשטח »</button><button class="btn ghost" data-act="back">לאלבום</button></div></div>`;
     this.overlay.querySelector('[data-act=go]')!.addEventListener('click', () => this.startCase(def));
     this.overlay.querySelector('[data-act=back]')!.addEventListener('click', () => this.showAlbum());
+    this.overlay.querySelector<HTMLButtonElement>('[data-act=go]')!.focus();
   }
 
   startCase(def: CaseDef, retry = 0) {
@@ -318,7 +321,14 @@ export class App {
     this.sfx.ambience(amb);
     const first = idx === 0 ? s.def.introHe : pc.stampHe ?? 'גלויה חדשה! איפה אנחנו הפעם?';
     this.radio(first, 6);
-    if (s.def.id === 1 && idx === 0) setTimeout(() => this.mode === 'explore' && this.radio('טיפ: גררו כדי להסתכל מסביב, לחצו על הקרקע כדי ללכת (או <bdi>WASD</bdi>). הסתכלו על דברים מעניינים — הם נכתבים במחברת.', 8), 6500);
+    if (s.def.id === 1 && idx === 0) {
+      const touch = window.matchMedia?.('(pointer: coarse)').matches;
+      setTimeout(() => {
+        // Only if the player is still in this same tutorial postcard.
+        if (this.mode === 'explore' && this.session === s && s.idx === 0 && token === this.loadingToken)
+          this.radio(`טיפ: גררו כדי להסתכל מסביב, ${touch ? 'הקישו על הקרקע כדי ללכת' : 'לחצו על הקרקע כדי ללכת (או <bdi>WASD</bdi>)'}. הסתכלו על דברים מעניינים — הם נכתבים במחברת.`, 8);
+      }, 6500);
+    }
   }
 
   private clearWorld() {
@@ -334,10 +344,12 @@ export class App {
     const s = this.session!;
     const def = s.def;
     const best = this.progress.best(def.id);
+    const pc = def.postcards[s.idx];
+    const hintLbl = Number.isFinite(def.charges) ? '💡 רמז (עולה כוכב)' : '💡 רמז';
     this.hud.innerHTML = `
       <div class="tl"><button class="btn round" data-act="pause" aria-label="השהיה">⏸</button><button class="btn round" data-act="mute" aria-label="השתקה">${this.sfx.muted ? '🔇' : '🔊'}</button></div>
-      ${def.hints ? '<button class="btn hintbtn" data-act="hint">💡 רמז (עולה כוכב)</button>' : ''}
-      <div class="sunarc" aria-label="שעות אור"><svg viewBox="0 0 200 70"><path d="M10 60 Q100 -10 190 60" fill="none" stroke="#f2c75a" stroke-width="5" stroke-linecap="round" opacity="0.9"/><circle class="sundot" r="9" fill="#ffcf40" stroke="#fff3c0" stroke-width="3" cx="10" cy="60"/></svg><div class="lbl">שעות אור</div></div>
+      ${def.hints ? `<button class="btn hintbtn" data-act="hint">${hintLbl}</button>` : ''}
+      <div class="sunarc" aria-label="שעות אור"><svg viewBox="0 0 200 70"><path d="M10 60 Q100 -10 190 60" fill="none" stroke="#f2c75a" stroke-width="5" stroke-linecap="round" opacity="0.9"/><circle class="sundot" r="9" fill="${pc.night ? '#dfe6f5' : '#ffcf40'}" stroke="${pc.night ? '#9aa8c8' : '#fff3c0'}" stroke-width="3" cx="10" cy="60"/></svg><div class="lbl">${pc.night ? 'לילה' : 'שעות אור'}</div></div>
       <div class="title-pill"><div>${esc(def.titleHe)}<div class="sub">גלויה <bdi>${s.idx + 1}/${def.postcards.length}</bdi></div></div><span class="stars">${this.starsHtml(best?.stars ?? 0)}</span></div>
       <div class="radio paper"></div>
       <div class="notebook"><button class="toggle" data-act="nb">📓</button><h3>יומן תצפיות של חוקר נוף</h3><ul></ul></div>
@@ -378,7 +390,7 @@ export class App {
       .map((o) => {
         const l = notebookLine(o);
         const key = JSON.stringify(o);
-        return `<li class="${key === this.freshKey ? 'fresh' : ''}">• <span class="lab">${esc(l.label)}:</span> ${esc(l.value)}${l.num ? ` <bdi>${esc(l.num)}</bdi>` : ''}</li>`;
+        return `<li class="${key === this.freshKey ? 'fresh' : ''}">• <span class="lab">${esc(l.label)}:</span> ${esc(l.value)}${l.num ? ` <bdi class="num">${esc(l.num)}</bdi>` : ''}</li>`;
       })
       .join('');
   }
@@ -410,8 +422,8 @@ export class App {
     const climb = this.hud.querySelector<HTMLElement>('[data-act=climb]');
     if (climb) climb.style.display = ex.canClimb() ? '' : 'none';
     if (s.daylightLeft <= 0 && this.mode === 'explore') {
-      this.radio('השמש שוקעת! הגיע הזמן לנעוץ סיכה.', 4);
       this.openMap();
+      this.radio('השמש שוקעת! הגיע הזמן לנעוץ סיכה.', 6);
     }
   }
 
@@ -437,7 +449,12 @@ export class App {
   useTool(t: ToolId) {
     const s = this.session, ex = this.explorer, w = this.world;
     if (!s || !ex || !w || this.mode !== 'explore' || this.paused) return;
-    if (!s.canUse(t).ok) return;
+    const can = s.canUse(t);
+    if (!can.ok) {
+      if (can.reason === 'no charges') this.radio('נגמרו מטעני הכלים. אפשר עדיין להסתכל מסביב ולנעוץ סיכה.', 4);
+      else if (can.reason === 'already used here') this.radio(`כבר השתמשתם ב${TOOL_HE[t].name} בגלויה הזאת.`, 3);
+      return;
+    }
     if (t === 'kite' && ex.mode !== 'walk') return;
     const p = ex.player.position;
     const got = s.useTool(t, w.heightAt(p.x, p.z));
@@ -483,7 +500,8 @@ export class App {
   }
 
   radio(html: string, secs: number) {
-    const r = this.hud.querySelector('.radio');
+    // On the map the tip line doubles as the message line.
+    const r = this.hud.querySelector('.radio') ?? this.hud.querySelector('.maphud .tip');
     if (!r) return;
     r.innerHTML = `📻 ${html}`;
     r.classList.add('show');
@@ -508,7 +526,7 @@ export class App {
     this.hud.innerHTML = `<div class="maphud">
       <div class="tl"><button class="btn round" data-act="pause">⏸</button></div>
       <div class="title-pill"><div>${esc(s.def.titleHe)}<div class="sub">גלויה <bdi>${s.idx + 1}/${s.def.postcards.length}</bdi></div></div></div>
-      <div class="tip paper">לחצו על המפה כדי לנעוץ סיכה. גררו להזזה, גלגלו להתקרבות. ${late}</div>
+      <div class="tip paper">לחצו על המפה כדי לנעוץ סיכה (או חיצי המקלדת). גררו להזזה, גלגלו להתקרבות. ${late}</div>
       <div class="compass paper"><div class="arrow">↑</div>צפון</div>
       <div class="notebook mapnb"><h3>מה ראינו</h3><ul></ul></div>
       <button class="btn back" data-act="back">« חזרה לגלויה</button>
@@ -605,7 +623,7 @@ export class App {
     this.sfx.fanfare(res.stars);
     const rule = !res.ruleOk ? `<p>⚠️ ${def.rule === 'order_west_east' ? 'הסדר ממערב למזרח התהפך — לכן לכל היותר כוכב אחד.' : 'אחת הסיכות נפלה בצד הלא נכון של קו פרשת המים — לכן לכל היותר כוכב אחד.'}</p>` : '';
     const hint = s.hintsUsed ? '<p>💡 השתמשתם ברמז — כוכב אחד ירד.</p>' : '';
-    const bonus = res.bonus ? `<p>🎒 חסכתם <bdi>${res.chargesLeft}</bdi> מטעני כלים — תג חוקר חסכוני!</p>` : '';
+    const bonus = res.bonus ? `<p>🎒 ${res.chargesLeft === 1 ? 'חסכתם מטען כלי אחד' : `חסכתם <bdi>${res.chargesLeft}</bdi> מטעני כלים`} — תג חוקר חסכוני!</p>` : '';
     const nextCase = CASES.find((c) => c.id === def.id + 1);
     const finale = def.id === 18 && res.stars > 0 ? '<p>🐐 תפסתם את יעלי! האלבום חזר לרשות הטבע. תודה, חוקר נוף.</p>' : '';
     this.hud.innerHTML = '';
@@ -617,34 +635,35 @@ export class App {
       ${rule}${hint}${bonus}${finale}
       <div class="row">
         ${nextCase && def.id > 0 ? '<button class="btn" data-act="next">לתיק הבא »</button>' : ''}
-        <button class="btn ghost" data-act="retry">↻ שוב</button>
+        <button class="btn ghost" data-act="retry">משחקים שוב</button>
         <button class="btn ghost" data-act="album">לאלבום</button>
       </div></div>`;
     this.overlay.querySelector('[data-act=next]')?.addEventListener('click', () => this.openIntro(nextCase!));
     this.overlay.querySelector('[data-act=retry]')!.addEventListener('click', () => this.startCase(def));
     this.overlay.querySelector('[data-act=album]')!.addEventListener('click', () => this.showAlbum());
+    this.overlay.querySelector<HTMLButtonElement>('[data-act=next],[data-act=retry]')!.focus();
   }
 
   // ---------------------------------------------------------------- pause / settings
   pause(on: boolean, fromAlbum = false) {
-    this.paused = on && !fromAlbum;
-    if (!on) {
-      this.overlay.className = '';
-      this.overlay.innerHTML = '';
-      return;
+    if (!on || this.pauseEl) {
+      this.pauseEl?.remove();
+      this.pauseEl = null;
+      this.paused = false;
+      if (!on) return;
     }
+    this.paused = !fromAlbum;
+    this.explorer?.keys.clear();
     const el = document.createElement('div');
+    this.pauseEl = el;
     el.className = 'overlay';
     el.innerHTML = `<div class="card"><h2>${fromAlbum ? 'הגדרות' : 'הפסקה'}</h2>
       <div class="toggles">
         <label><input type="checkbox" data-t="mute" ${this.sfx.muted ? 'checked' : ''}/> השתקת צלילים</label>
         <label><input type="checkbox" data-t="reduced" ${this.reduced ? 'checked' : ''}/> פחות תנועה</label>
       </div>
-      <div class="row"><button class="btn" data-act="resume">${fromAlbum ? 'סגירה' : 'ממשיכים'}</button>${fromAlbum ? '' : '<button class="btn ghost" data-act="restart">↻ התחלה מחדש</button><button class="btn ghost" data-act="album">לאלבום</button>'}</div></div>`;
-    const close = () => {
-      el.remove();
-      this.paused = false;
-    };
+      <div class="row"><button class="btn" data-act="resume">${fromAlbum ? 'סגירה' : 'ממשיכים'}</button>${fromAlbum ? '' : '<button class="btn ghost" data-act="restart">התחלה מחדש</button><button class="btn ghost" data-act="album">לאלבום</button>'}</div></div>`;
+    const close = () => this.pause(false);
     el.querySelector('[data-act=resume]')!.addEventListener('click', close);
     el.querySelector('[data-act=restart]')?.addEventListener('click', () => {
       close();
@@ -654,13 +673,22 @@ export class App {
       close();
       this.showAlbum();
     });
-    el.querySelector<HTMLInputElement>('[data-t=mute]')!.addEventListener('change', () => this.toggleMute());
+    el.querySelector<HTMLInputElement>('[data-t=mute]')!.addEventListener('change', () => {
+      this.toggleMute();
+      this.syncMuteIcon();
+    });
     el.querySelector<HTMLInputElement>('[data-t=reduced]')!.addEventListener('change', (e) => {
       this.reduced = (e.target as HTMLInputElement).checked;
       document.body.classList.toggle('reduced', this.reduced);
       this.progress.set({ reduced: this.reduced });
     });
     this.root.appendChild(el);
+    el.querySelector<HTMLButtonElement>('[data-act=resume]')!.focus();
+  }
+
+  /** Keep every on-screen mute button in step with the sound state. */
+  private syncMuteIcon() {
+    this.root.querySelectorAll<HTMLElement>('[data-act=mute]').forEach((b) => (b.textContent = this.sfx.muted ? '🔇' : '🔊'));
   }
 
   toggleMute() {
@@ -718,8 +746,13 @@ export class App {
     );
     window.addEventListener('keydown', (e) => {
       const k = e.key.toLowerCase();
+      if (this.pauseEl) {
+        if (k === 'p' || k === 'escape') this.pause(false);
+        return; // nothing else reaches the game while the pause card is up
+      }
       if (k === 'p' || k === 'escape') {
-        if (this.mode === 'explore' || this.mode === 'map') this.pause(!this.paused);
+        if (this.mode === 'explore' || this.mode === 'map' || this.mode === 'reveal') this.pause(true);
+        else if (k === 'escape') this.overlay.querySelector<HTMLButtonElement>('[data-act=back],[data-act=album]')?.click();
         return;
       }
       if (this.mode === 'explore') {
@@ -732,6 +765,14 @@ export class App {
       } else if (this.mode === 'map') {
         if (k === 'enter') this.commit();
         if (k === 'm' || k === 'backspace') this.closeMap();
+        // Keyboard pinning: arrows move the pin (Shift for big steps), starting from the middle of the country.
+        const step = e.shiftKey ? 0.25 : 0.04;
+        const d = { arrowup: [step, 0], arrowdown: [-step, 0], arrowright: [0, step], arrowleft: [0, -step] }[k];
+        if (d) {
+          e.preventDefault();
+          const p = (this.session && this.session.pins[this.session.idx]) ?? { lat: 31.5, lon: 35.0 };
+          this.placePinAt(Math.max(29.5, Math.min(33.4, p.lat + d[0])), Math.max(34.2, Math.min(35.9, p.lon + d[1])));
+        }
       } else if (this.mode === 'reveal' && (k === 'enter' || k === ' ')) this.next();
     });
     window.addEventListener('keyup', (e) => this.explorer?.keys.delete(e.key.toLowerCase()));

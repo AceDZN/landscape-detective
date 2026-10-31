@@ -20,7 +20,7 @@ export function dailyCase(key: string): CaseDef {
     id: 0,
     world: 1,
     titleHe: `התיק היומי · ${key}`,
-    introHe: 'חמש גלויות חדשות מכל הארץ. שלושה כלים לכל גלויה — בחרו בחוכמה.',
+    introHe: 'חמש גלויות חדשות מכל הארץ. 15 מטעני כלים לכל התיק — חלקו אותם בחוכמה בין הגלויות.',
     postcards: pick.map((placeId, i) => ({ placeId, season: seasons[i % 4], hour: 9 + i * 1.5 })),
     charges: 15,
     hints: true,

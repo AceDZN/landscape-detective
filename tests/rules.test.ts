@@ -95,7 +95,7 @@ test('wrong approach: reading the Golan basalt as limestone points the solver at
 });
 
 test('hints cost a star and point at an unused intended clue, never a region', () => {
-  const c = CASES.find((x) => x.hints && x.intended[0].length > 0)!;
+  const c = CASES.find((x) => x.hints && Number.isFinite(x.charges) && x.intended[0].length > 0)!;
   const s = new CaseSession(c, PLACES);
   const q = s.hint()!;
   assert.ok(q && q.includes('מחברת השדה'));
@@ -120,4 +120,15 @@ test('hints cost a star and point at an unused intended clue, never a region', (
 test('the final case allows no hints', () => {
   const s = new CaseSession(CASES[17], PLACES);
   assert.equal(s.hint(), null);
+});
+
+test('the tutorial teaches the hint button for free: no star lost in case 1', () => {
+  const c = CASES.find((x) => x.id === 1)!;
+  const s = new CaseSession(c, PLACES);
+  assert.ok(s.hint());
+  s.openMap();
+  s.setPin(s.place.lat, s.place.lon);
+  s.commitPin();
+  s.next();
+  assert.equal(s.result(relief).stars, 3);
 });

@@ -13,7 +13,7 @@ export const CASES: CaseDef[] = [
     id: 1,
     world: 1,
     titleHe: 'הגלויה הראשונה',
-    introHe: 'כאן הסיירת. יעלי ברחה עם אלבום הגלויות! הגלויה הראשונה נחתה בשקיעה. הסתכל לאן השמש שוקעת, נסה כל כלי שתרצה, ונעץ סיכה.',
+    introHe: 'כאן הסיירת. יעלי ברחה עם אלבום הגלויות! הגלויה הראשונה נחתה בשקיעה. הסתכלו לאן השמש שוקעת, נסו כל כלי שתרצו, ונעצו סיכה.',
     postcards: [{ placeId: 'nitzanim_dunes', season: 'autumn', hour: 17.3, stampHe: 'שקיעה של סתיו' }],
     charges: Infinity,
     hints: true,
@@ -25,7 +25,7 @@ export const CASES: CaseDef[] = [
     id: 2,
     world: 1,
     titleHe: 'טרסות של אבן',
-    introHe: 'שלוש גלויות של מדרונות אבן. מדד גובה לפני שאתה מחליט באיזו רצועה אתה עומד.',
+    introHe: 'שלוש גלויות של מדרונות אבן. מדדו גובה לפני שאתם מחליטים באיזו רצועה אתם עומדים.',
     postcards: [
       { placeId: 'tzuba_terraces', season: 'spring', hour: 9, stampHe: 'בוקר אביבי בין המדרגות' },
       { placeId: 'jerusalem_forest_ridge', season: 'winter', hour: 11, stampHe: 'ערפל על הרכס' },
@@ -41,7 +41,7 @@ export const CASES: CaseDef[] = [
     id: 3,
     world: 1,
     titleHe: 'מתחת לפני הים',
-    introHe: 'המד־גובה משתגע: הוא מראה מספרים שליליים. שלוש גלויות מהבקע. איפה בדיוק לאורכו?',
+    introHe: 'מד הגובה משתגע: הוא מראה מספרים שליליים. שלוש גלויות מהבקע. איפה בדיוק לאורכו?',
     postcards: [
       { placeId: 'ein_gedi_shore', season: 'spring', hour: 8, stampHe: 'קרום מלח לבן על החוף' },
       { placeId: 'hatzeva_arava', season: 'winter', hour: 14, stampHe: 'שקט ושטוח, הרים משני הצדדים' },
@@ -57,7 +57,7 @@ export const CASES: CaseDef[] = [
     id: 4,
     world: 1,
     titleHe: 'אבן שחורה',
-    introHe: 'סלעים כהים, וגבעות חרוטיות באופק. אל תמהר להגיד "גליל". תן לפטיש לדבר.',
+    introHe: 'סלעים כהים, וגבעות חרוטיות באופק. אל תמהרו להגיד "גליל". תנו לפטיש לדבר.',
     postcards: [
       { placeId: 'golan_bental', season: 'winter', hour: 10, stampHe: 'חרוטים באופק' },
       { placeId: 'golan_gamla', season: 'spring', hour: 15, stampHe: 'ערוץ עמוק בין סלעים שחורים' },
@@ -157,7 +157,7 @@ export const CASES: CaseDef[] = [
     id: 10,
     world: 2,
     titleHe: 'שתי עונות',
-    introHe: 'אותו מדרון בחורף ובקיץ, ועוד גלויה מהמדרון שמעבר להר. נעץ את שלושתן, ושים לב באיזה צד של ההר אתה.',
+    introHe: 'אותו מדרון בחורף ובקיץ, ועוד גלויה מהמדרון שמעבר להר. נעצו את שלושתן, ושימו לב באיזה צד של ההר אתם.',
     postcards: [
       { placeId: 'judean_desert_east', season: 'winter', hour: 10, stampHe: 'חורף: קצת ירוק בין האבנים' },
       { placeId: 'judean_desert_east', season: 'summer', hour: 10, stampHe: 'קיץ: הכול צהוב וחשוף' },
@@ -282,7 +282,7 @@ export const CASES: CaseDef[] = [
     hints: true,
     starKm: [9, 25, 60],
     intended: [['hammer'], ['altimeter', 'kite'], ['kite'], ['altimeter', 'kite']],
-    trapHe: 'נוף גלובלי לא מספר איפה אתה: מגדלי זכוכית ורשתות נראים אותו דבר בכל מקום, ולכן רמזי הטבע מכריעים.',
+    trapHe: 'נוף גלובלי לא מספר איפה אתם: מגדלי זכוכית ורשתות נראים אותו דבר בכל מקום, ולכן רמזי הטבע מכריעים.',
   },
   {
     id: 18,

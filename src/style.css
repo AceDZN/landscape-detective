@@ -175,7 +175,7 @@ bdi,
 
 .radio {
   position: absolute;
-  top: clamp(70px, 13vmin, 120px);
+  top: clamp(76px, 13.6vmin, 126px);
   left: 50%;
   transform: translateX(-50%);
   max-width: min(640px, 80%);
@@ -198,7 +198,7 @@ bdi,
   position: absolute;
   right: clamp(14px, 2.6vmin, 28px);
   top: clamp(80px, 15vmin, 140px);
-  width: clamp(170px, 24vmin, 270px);
+  width: clamp(190px, 27vmin, 290px);
   min-height: clamp(180px, 34vmin, 360px);
   padding: 34px 16px 14px;
   background: repeating-linear-gradient(var(--paper) 0 30px, #d8c39a 30px 31px);
@@ -237,6 +237,10 @@ bdi,
 .notebook li.fresh {
   animation: ink 0.6s ease-out;
   background: linear-gradient(90deg, transparent, rgba(255, 220, 90, 0.55) 15%, rgba(255, 220, 90, 0.55) 85%, transparent);
+}
+.notebook li .num {
+  white-space: nowrap;
+  direction: ltr;
 }
 .notebook li .lab {
   color: var(--ink-soft);
@@ -739,6 +743,13 @@ bdi,
   gap: 10px;
   flex-wrap: wrap;
 }
+.album-foot .blurb {
+  color: #f3e6c8;
+  margin: 0;
+  align-self: center;
+  font-size: clamp(12px, 1.8vmin, 16px);
+  max-width: 52ch;
+}
 .album-foot .btn {
   font-size: clamp(16px, 2.6vmin, 24px);
   padding: 10px 22px;
@@ -919,5 +930,26 @@ body.reduced * {
     bottom: 76px;
     width: 40vw;
     max-height: 18vh;
+  }
+}
+
+@media (max-width: 520px) {
+  /* Long case titles shrink instead of wrapping over the pause button. */
+  .title-pill {
+    max-width: calc(100% - 190px);
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .album-foot .blurb {
+    flex-basis: 100%;
+    max-width: none;
+    padding: 0 10px;
+    box-sizing: border-box;
+    text-align: center;
+    order: -1;
+    margin: 0;
+    font-size: 13px;
   }
 }

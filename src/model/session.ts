@@ -173,7 +173,8 @@ export class CaseSession {
     let stars = starsFor(avgKm, this.def.starKm);
     const ruleOk = this.ruleOk(relief);
     if (!ruleOk) stars = Math.min(stars, 1);
-    if (this.hintsUsed > 0) stars = Math.max(0, stars - 1);
+    // The tutorial (unlimited charges) teaches the hint button, so it costs nothing there.
+    if (this.hintsUsed > 0 && Number.isFinite(this.def.charges)) stars = Math.max(0, stars - 1);
     const points = this.results.reduce((a, r) => a + r.points, 0);
     const bonus = stars >= 2 && this.charges > 0 && Number.isFinite(this.def.charges) && this.def.charges < 50;
     return { avgKm, stars, bonus, points, ruleOk, chargesLeft: this.charges };

@@ -110,7 +110,9 @@ export class PinMap {
     // Pin: brass needle with red head
     const needle = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.05, 14, 8), new THREE.MeshStandardMaterial({ color: 0xc9a24a, metalness: 0.8, roughness: 0.3 }));
     needle.position.y = 7;
-    const head = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 12), new THREE.MeshStandardMaterial({ color: 0xd8342a, roughness: 0.35 }));
+    // Drawn after the city labels so a name never hides where the player pinned.
+    const head = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 12), new THREE.MeshStandardMaterial({ color: 0xd8342a, roughness: 0.35, transparent: true, depthTest: false }));
+    head.renderOrder = 20;
     head.position.y = 15;
     this.pin.add(needle, head);
     this.pin.visible = false;
