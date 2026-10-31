@@ -1,0 +1,75 @@
+{
+  "_readme": "All GLBs: Y-up, base at y=0, normalised by Tripo so the largest extent is 1.0 (see bindBBox). Scale = heightM / bindHeight. Only EXT_texture_webp (+ KHR_mesh_quantization for market_stall) is required: plain THREE.GLTFLoader, no meshopt/draco decoder. Tripo meshes are dressing only, never colliders or geography. Provenance in /ASSETS.md.",
+  "ranger": {
+    "file": "ranger.glb",
+    "heightM": 1.6,
+    "bindHeight": 1.0,
+    "forward": "+Z",
+    "rigged": true,
+    "skeleton": "Mixamo humanoid, 66 joints mixamorig:*, root node Armature",
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "climb": "climb",
+      "hammer": "chop",
+      "write": "play_mobile_game",
+      "look": "look_around",
+      "cheer": "cheer",
+      "miss": "frustrated_01"
+    },
+    "clipSeconds": { "idle": 15.33, "walk": 2.33, "run": 1.25, "climb": 3.46, "chop": 6.58, "play_mobile_game": 17.79, "look_around": 15.58, "cheer": 12.08, "frustrated_01": 3.54 },
+    "bindBBox": { "min": [-0.466, 0, -0.243], "max": [0.466, 1.0, 0.243] },
+    "notes": "T-pose bind (x span = arms). Stay-in-place clips. 'climb' is a ONE-SHOT ledge pull-up: Hips rise from 0.33 to 1.19 (bind units), so play once (LoopOnce, clampWhenFinished), then move the object up by 0.81*scale and crossfade to idle. 'run' Hips X/Z were zeroed to bind (Tripo baked a +0.40 forward offset). 'chop' = two-handed overhead swing; the rock hammer in the mesh is holstered at the right hip, so parent a small procedural hammer to mixamorig:RightHand while chopping. 'play_mobile_game' (head down, hands at chest) reads as writing in the notebook; optionally parent a small notebook to mixamorig:LeftHand. 'frustrated_01' for a far pin."
+  },
+  "ibex": {
+    "file": "ibex.glb",
+    "heightM": 1.1,
+    "bindHeight": 1.0,
+    "forward": "+Z",
+    "yawOffsetRad": 0.57,
+    "rigged": true,
+    "skeleton": "Tripo quadruped ('Other') auto-rig, 35 joints, root joint tripo::Root under node Armature",
+    "clips": {
+      "walk": "preset:quadruped:walk",
+      "run": "preset:quadruped:walk",
+      "idle": "preset:quadruped:walk",
+      "leap": "preset:quadruped:walk",
+      "taunt": "preset:quadruped:walk",
+      "sulk": "preset:quadruped:walk"
+    },
+    "clipSeconds": { "preset:quadruped:walk": 2.58 },
+    "proceduralRoles": {
+      "idle": "walk clip paused at t=0 (weight 1, timeScale 0) + procedural breathing (Spine_1 scale/rotation) and slow head look (tripo::Head_1 yaw +-0.3 rad)",
+      "run": "walk clip at timeScale 2.0-2.4 + small vertical bob",
+      "leap": "walk clip at timeScale 2.5 + parabolic root arc in code (0.6-1.0 m high), tuck legs by rotating tripo::0_*_Limb_1 / tripo::1_*_Limb_1",
+      "taunt": "walk paused + fast head shake: tripo::Head_1 yaw sin(t*18)*0.35 for 0.8 s, then a little hop; pair with a bleat/laugh sound",
+      "sulk": "walk paused + lower the body (object y -0.25*scale), pitch tripo::Head_0/Head_1 down ~0.5 rad, fold legs by bending Limb_1/Limb_2; a short 'hmph' puff"
+    },
+    "bones": {
+      "neck": ["tripo::Head_0", "tripo::Head_1"],
+      "skull": "tripo::Head_2",
+      "horns": ["tripo::Head_3", "tripo::Head_4", "tripo::Head_5", "bone_10", "bone_11", "bone_12", "bone_13"],
+      "spine": ["tripo::Spine_0", "tripo::Spine_1", "tripo::Spine_2"],
+      "frontLegs": ["tripo::0_Left_Limb_0..3", "tripo::0_Right_Limb_0..3"],
+      "hindLegs": ["tripo::1_Left_Limb_0..3", "tripo::1_Right_Limb_0..3"],
+      "tail": ["bone_30", "bone_31", "bone_32", "bone_33", "bone_34"]
+    },
+    "bindBBox": { "min": [-0.371, 0, -0.441], "max": [0.371, 1.0, 0.441] },
+    "notes": "Tripo only offers a quadruped Walk preset; its AI animation and multi-stage motion are humanoid-only, so idle/leap/taunt/sulk are procedural on this skeleton. The head looks toward +Z but the BODY is yawed ~33 deg toward -X (front feet mid (0.02, 0.06), hind feet mid (0.25, -0.30)): set rotation.y = yawOffsetRad (+0.57) so the walk travels along +Z. Height 1.0 bind units includes horns. Coat is bright golden-orange; tint material.color toward #E8C48A if it reads too orange."
+  },
+  "acacia":         { "file": "acacia.glb",         "heightM": 6.0,  "bindHeight": 1.0,   "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.499, 0, -0.263], "max": [0.499, 1.0, 0.263] }, "notes": "NEW. Umbrella acacia (Arava/Eilat): twisted trunk, flat-ish green crown with yellow puffballs. Canopy wider along X." },
+  "date_palm":      { "file": "date_palm.glb",      "heightM": 10.0, "bindHeight": 1.0,   "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.432, 0, -0.38], "max": [0.432, 1.0, 0.38] }, "notes": "NEW. Two leaning date palms with orange date bunches (Dead Sea / Ein Gedi / Kinneret oasis). Asked for three, got two." },
+  "basalt_boulders":{ "file": "basalt_boulders.glb","heightM": 1.6,  "bindHeight": 1.0,   "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.495, 0, -0.444], "max": [0.495, 1.0, 0.444] }, "notes": "NEW. Cluster of 4-5 rounded charcoal/blue-grey vesicular basalt boulders with lichen dots and two yellow grass tufts. Golan / Kinneret hammer target; scale 0.8-2.5 m and rotate for variety." },
+  "lookout_tower":  { "file": "lookout_tower.glb",  "heightM": 8.0,  "bindHeight": 1.0,   "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.313, 0, -0.277], "max": [0.313, 1.0, 0.277] }, "notes": "NEW. Wooden nature-reserve lookout: four braced legs, zig-zag stair, roofed platform with green flag and brass binoculars, low stone base. Platform floor at about 0.55 bind height (≈4.4 m at 8 m) — check in scene. The one climbable lookout per postcard." },
+  "church_tower":   { "file": "church_tower.glb",   "heightM": 18.0, "bindHeight": 1.0,   "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.23, 0, -0.219], "max": [0.23, 1.0, 0.219] }, "notes": "NEW. Honey-yellow limestone bell tower, bronze bell in the belfry, mint-green spire + cross, red arched door facing +Z. Rather saturated yellow; tint toward #EBDDBF for cream limestone if needed." },
+  "minaret":        { "file": "minaret.glb",        "heightM": 25.0, "bindHeight": 1.0,   "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.099, 0, -0.097], "max": [0.099, 1.0, 0.097] }, "notes": "NEW. Slender stone minaret: square base with arched door (+Z), octagonal shaft, balcony, green cone dome with gold crescent. Tripo painted the shaft lavender; the base-colour texture was recoloured to cream limestone and strong blue to teal (see ASSETS.md)." },
+  "olive":          { "file": "olive.glb",          "heightM": 5.0,  "bindHeight": 0.961, "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.5, 0, -0.391], "max": [0.5, 0.961, 0.391] }, "notes": "REUSED (ph-rangers via rift-makers). Gnarled olive for Judean terraces." },
+  "cypress":        { "file": "cypress.glb",        "heightM": 10.0, "bindHeight": 1.0,   "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.138, 0, -0.134], "max": [0.138, 1.0, 0.134] }, "notes": "REUSED (ph-rangers via rift-makers). Mediterranean cypress, instancing-friendly (4.8k tris)." },
+  "fan_palm":       { "file": "fan_palm.glb",       "heightM": 12.0, "bindHeight": 1.0,   "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.334, 0, -0.306], "max": [0.334, 1.0, 0.306] }, "notes": "REUSED (halfpipe-joule). Washingtonia fan palm: Tel Aviv promenade / global street. Not a date palm." },
+  "rocks":          { "file": "rocks.glb",          "heightM": 1.2,  "bindHeight": 0.603, "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.5, 0, -0.413], "max": [0.5, 0.603, 0.413] }, "notes": "REUSED (ph-rangers via rift-makers). Cream limestone boulder cluster. Tint material.color: kurkar #D9925A, red granite #C0645A, chalk #F2EEE2; keep basalt to basalt_boulders." },
+  "terrace_wall":   { "file": "terrace_wall.glb",   "heightM": 1.2,  "bindHeight": 0.911, "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.5, 0, -0.246], "max": [0.5, 0.911, 0.246] }, "notes": "REUSED (ph-rangers wall-high, dequantized). Square dry-stone limestone panel; squash Y to ~0.5 and tile along X for Judean terraces; also usable as a Nabatean check-dam course (tint ochre)." },
+  "field_wall":     { "file": "field_wall.glb",     "heightM": 0.9,  "bindHeight": 0.325, "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.5, 0, -0.098], "max": [0.5, 0.325, 0.098] }, "notes": "REUSED (ph-rangers wall, dequantized). Long low dry-stone wall, long axis X. Tint dark grey #4A4644 for Golan basalt field walls." },
+  "house":          { "file": "house.glb",          "heightM": 5.0,  "bindHeight": 0.808, "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.5, 0, -0.444], "max": [0.5, 0.808, 0.444] }, "notes": "REUSED (ph-rangers via rift-makers). Cream limestone flat-roof stone house, turquoise door +Z. Jerusalem / Nazareth / Galilee." },
+  "market_stall":   { "file": "market_stall.glb",   "heightM": 2.8,  "bindHeight": 0.915, "forward": "+Z", "clips": {}, "bindBBox": { "min": [-0.491, 0, -0.278], "max": [0.49, 0.915, 0.278] }, "notes": "REUSED (clumpus). Wooden stall, striped yellow/coral awning, crates of citrus and watermelons. Claymation-ish; fine for Nazareth old market. Uses KHR_mesh_quantization (core three.js support)." }
+}

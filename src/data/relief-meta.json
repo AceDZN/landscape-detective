@@ -1,0 +1,293 @@
+{
+ "source": "AWS Terrain Tiles (terrarium), Mapzen/Tilezen joerd: SRTM, ETOPO1 and others",
+ "country": {
+  "north": 33.45,
+  "west": 34.1,
+  "step": 0.005,
+  "rows": 811,
+  "cols": 381,
+  "zoom": 10
+ },
+ "patch": {
+  "size": 201,
+  "spacingM": 20,
+  "zoom": 13
+ },
+ "places": {
+  "nitzanim_dunes": {
+   "centerM": 11,
+   "minM": -5,
+   "maxM": 52
+  },
+  "ashdod_yam_dunes": {
+   "centerM": 36,
+   "minM": -7,
+   "maxM": 53
+  },
+  "palmachim_cliff": {
+   "centerM": 29,
+   "minM": -4,
+   "maxM": 42
+  },
+  "apollonia_cliff": {
+   "centerM": 29,
+   "minM": -10,
+   "maxM": 51
+  },
+  "dor_coast": {
+   "centerM": 0,
+   "minM": -7,
+   "maxM": 31
+  },
+  "zikim_coast": {
+   "centerM": 11,
+   "minM": -10,
+   "maxM": 61
+  },
+  "hadera_dunes": {
+   "centerM": 9,
+   "minM": -2,
+   "maxM": 44
+  },
+  "tzuba_terraces": {
+   "centerM": 712,
+   "minM": 478,
+   "maxM": 785
+  },
+  "beit_guvrin_chalk": {
+   "centerM": 290,
+   "minM": 210,
+   "maxM": 392
+  },
+  "carmel_ridge": {
+   "centerM": 484,
+   "minM": 176,
+   "maxM": 543
+  },
+  "jerusalem_forest_ridge": {
+   "centerM": 692,
+   "minM": 524,
+   "maxM": 837
+  },
+  "judean_west_slope": {
+   "centerM": 631,
+   "minM": 422,
+   "maxM": 761
+  },
+  "judean_desert_east": {
+   "centerM": 193,
+   "minM": -57,
+   "maxM": 286
+  },
+  "meron_forest": {
+   "centerM": 1105,
+   "minM": 708,
+   "maxM": 1199
+  },
+  "baram_forest": {
+   "centerM": 691,
+   "minM": 506,
+   "maxM": 828
+  },
+  "nahal_kziv": {
+   "centerM": 288,
+   "minM": 155,
+   "maxM": 560
+  },
+  "hermon_neve_ativ": {
+   "centerM": 940,
+   "minM": 576,
+   "maxM": 1502
+  },
+  "banias_springs": {
+   "centerM": 358,
+   "minM": 219,
+   "maxM": 969
+  },
+  "lahav_forest": {
+   "centerM": 460,
+   "minM": 368,
+   "maxM": 521
+  },
+  "nazareth_old_city": {
+   "centerM": 362,
+   "minM": 181,
+   "maxM": 502
+  },
+  "jerusalem_old_city": {
+   "centerM": 782,
+   "minM": 558,
+   "maxM": 833
+  },
+  "jerusalem_stone_street": {
+   "centerM": 798,
+   "minM": 628,
+   "maxM": 839
+  },
+  "haifa_carmel_slope": {
+   "centerM": 258,
+   "minM": -11,
+   "maxM": 314
+  },
+  "safed_old_city": {
+   "centerM": 741,
+   "minM": 289,
+   "maxM": 949
+  },
+  "jezreel_fields": {
+   "centerM": 84,
+   "minM": 48,
+   "maxM": 178
+  },
+  "ein_gedi_shore": {
+   "centerM": -412,
+   "minM": -417,
+   "maxM": -51
+  },
+  "kalya_north_dead_sea": {
+   "centerM": -398,
+   "minM": -418,
+   "maxM": -329
+  },
+  "mineral_sinkholes": {
+   "centerM": -415,
+   "minM": -425,
+   "maxM": 277
+  },
+  "sodom_shore": {
+   "centerM": -385,
+   "minM": -399,
+   "maxM": -167
+  },
+  "beit_shean_valley": {
+   "centerM": -151,
+   "minM": -230,
+   "maxM": -112
+  },
+  "hatzeva_arava": {
+   "centerM": -131,
+   "minM": -162,
+   "maxM": -89
+  },
+  "yotvata_acacias": {
+   "centerM": 58,
+   "minM": 46,
+   "maxM": 78
+  },
+  "paran_wadi": {
+   "centerM": 98,
+   "minM": 84,
+   "maxM": 263
+  },
+  "coral_beach": {
+   "centerM": 1,
+   "minM": -3,
+   "maxM": 261
+  },
+  "kinneret_tiberias": {
+   "centerM": -213,
+   "minM": -216,
+   "maxM": 243
+  },
+  "jordan_inflow_kinneret": {
+   "centerM": -212,
+   "minM": -220,
+   "maxM": -21
+  },
+  "golan_bental": {
+   "centerM": 905,
+   "minM": 852,
+   "maxM": 1158
+  },
+  "golan_gamla": {
+   "centerM": 377,
+   "minM": 46,
+   "maxM": 492
+  },
+  "katzrin_town": {
+   "centerM": 321,
+   "minM": 187,
+   "maxM": 439
+  },
+  "beersheva_loess": {
+   "centerM": 304,
+   "minM": 248,
+   "maxM": 397
+  },
+  "revivim_loess": {
+   "centerM": 271,
+   "minM": 246,
+   "maxM": 296
+  },
+  "halutza_dunes": {
+   "centerM": 254,
+   "minM": 206,
+   "maxM": 345
+  },
+  "eilat_granite": {
+   "centerM": 194,
+   "minM": 42,
+   "maxM": 384
+  },
+  "ramon_rim": {
+   "centerM": 869,
+   "minM": 524,
+   "maxM": 910
+  },
+  "ramon_floor_west": {
+   "centerM": 547,
+   "minM": 491,
+   "maxM": 686
+  },
+  "ramon_floor_east": {
+   "centerM": 454,
+   "minM": 316,
+   "maxM": 554
+  },
+  "makhtesh_katan": {
+   "centerM": 29,
+   "minM": -59,
+   "maxM": 308
+  },
+  "makhtesh_gadol": {
+   "centerM": 363,
+   "minM": 321,
+   "maxM": 576
+  },
+  "ein_avdat_canyon": {
+   "centerM": 380,
+   "minM": 350,
+   "maxM": 554
+  },
+  "shivta_dams": {
+   "centerM": 348,
+   "minM": 306,
+   "maxM": 464
+  },
+  "yeruham_town": {
+   "centerM": 496,
+   "minM": 453,
+   "maxM": 571
+  },
+  "arad_town": {
+   "centerM": 610,
+   "minM": 406,
+   "maxM": 639
+  },
+  "akko_old_city": {
+   "centerM": 10,
+   "minM": -5,
+   "maxM": 32
+  },
+  "tel_aviv_towers": {
+   "centerM": 18,
+   "minM": -15,
+   "maxM": 155
+  },
+  "bat_yam_dense": {
+   "centerM": 31,
+   "minM": -2,
+   "maxM": 57
+  }
+ }
+}
