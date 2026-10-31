@@ -29,3 +29,7 @@
   - Sizes: JS 812 kB (212 kB gzip), CSS 23 kB, fonts ~0.4 MB, models 12 MB (loaded per postcard), relief 7.5 MB (country 0.6 MB plus one 80 kB patch per postcard).
   - Speed: 60 fps (vsync) on an M2 Max in Playwright Chromium, 51–428 draw calls, about 2.2M triangles.
   - Added adaptive resolution: the pixel ratio steps down to 0.75 if exploring stays under ~32 fps for 2 s.
+- **19:00–19:40** An independent playtester agent ran the game fresh: 0 blockers, 5 major, 8 minor and 10 polish findings, all fixed except "0★ still unlocks" (kept on purpose). Details are in `PLAYTEST.md`.
+  - Akko's belt and rock were corrected by fixing the coast polygon, so the zone model and the place now agree.
+  - The daily pool verifier now requires a pass under every rain-gauge seed (39/55 places).
+  - Full automated passes: every case gives 3★ with true pins and 0–1★ with 60 km-off pins, with 0 console errors.

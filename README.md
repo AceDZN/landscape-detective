@@ -33,9 +33,10 @@ Headless drive with real inputs (Playwright): `node scripts/drive.mjs click:.slo
 | Climb the lookout (once per postcard) | 🪜 button when near | `E` |
 | Notice a feature | look at it for a moment (the 🔍 ring fills) | — |
 | Open the map | 🗺️ למפה | `M` |
-| Pin / commit | tap the map, then 📍 נועצים כאן | `Enter` |
-| Hint (costs a star; not in the final case) | 💡 | `H` |
-| Pause | ⏸ | `P` / `Esc` |
+| Pin / commit | tap the map, then 📍 נועצים כאן | arrows move the pin (`Shift` = big steps), `Enter` commits |
+| Back to the postcard | « חזרה לגלויה | `M` / `Backspace` |
+| Hint (costs a star, free in the tutorial; none in the final case) | 💡 | `H` |
+| Pause / close a card | ⏸ | `P` / `Esc` (cards: `Enter` on the focused button, `Esc` goes back) |
 
 North is always up on the map and east is to the right, even though the UI reads right-to-left.
 
