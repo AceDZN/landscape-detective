@@ -269,6 +269,8 @@ export class Explorer {
       if (k >= 1) {
         this.mode = 'lookout';
         this.modeT = 0;
+        // First person on the deck: hide the tower so its posts never fill the view.
+        if (w.lookoutObj) w.lookoutObj.visible = false;
         this.ranger?.play('idle');
       }
     } else if (this.mode === 'lookout') {
@@ -276,6 +278,7 @@ export class Explorer {
       if (this.modeT > 0.2 && (this.keys.has('w') || this.keys.has('s') || this.keys.has('a') || this.keys.has('d') || this.keys.has('arrowup') || this.keys.has('arrowdown') || this.keys.has('escape') || this.target)) {
         this.target = null;
         this.mode = 'walk';
+        if (w.lookoutObj) w.lookoutObj.visible = true;
         p.set(w.lookout.x + 2.5, w.heightAt(w.lookout.x + 2.5, w.lookout.z), w.lookout.z);
       }
     } else if (this.mode === 'kite') {

@@ -56,20 +56,22 @@ export interface TerrainEdit {
 
 export class TerrainField {
   edits: TerrainEdit[] = [];
-  /** Coastal patches: SRTM reads ~0 m on the water, so let the beach shelve under the sea surface. */
-  seaShelf = false;
+  /** Water surface (sea 0 m, or a lake): SRTM reads the water as flat ground, so let the shore shelve under it. */
+  shelf: number | null = null;
   constructor(readonly patch: PatchRelief, readonly detail: number) {}
 
   base(x: number, z: number) {
     const h = smoothPatch(this.patch, x, z);
-    return this.seaShelf && h < 0.8 ? h - (0.8 - h) * 3 : h;
+    if (this.shelf === null) return h;
+    const lip = this.shelf + 0.8;
+    return h < lip ? h - (lip - h) * 3 : h;
   }
 
   height(x: number, z: number): number {
     let h = this.base(x, z);
     const edge = Math.max(Math.abs(x), Math.abs(z));
     const fade = Math.max(0, Math.min(1, (NEAR_HALF - edge) / 80));
-    if (this.seaShelf && h < 0.3) return h;
+    if (this.shelf !== null && h < this.shelf + 0.3) return h;
     if (fade > 0) h += fbm(x / 9, z / 9, 3) * this.detail * fade + fbm(x / 1.7, z / 1.7, 2) * this.detail * 0.18 * fade;
     for (const e of this.edits) {
       const d = Math.hypot(x - e.x, z - e.z);
@@ -79,6 +81,7 @@ export class TerrainField {
   }
 }
 
+const _c = new THREE.Color();
 function colorFor(out: THREE.Color, h: number, slope: number, n: number, biome: Biome, waterLevel: number | null) {
   const ground = new THREE.Color(biome.groundColor);
   const rock = new THREE.Color(biome.rockColor);
@@ -88,6 +91,12 @@ function colorFor(out: THREE.Color, h: number, slope: number, n: number, biome: 
   out.lerp(grass, g);
   const r = Math.max(0, Math.min(1, (slope - 0.35) * 2.2 + n * 0.2));
   out.lerp(rock, r);
+  if (biome.floor && h < biome.floor.belowM) out.lerp(_c.set(biome.floor.color), Math.min(1, (biome.floor.belowM - h) / 40) * 0.6);
+  if (biome.strata) {
+    const band = biome.strata[Math.abs(Math.floor(h / 9 + n * 0.25)) % biome.strata.length];
+    out.lerp(_c.set(band), Math.max(0, Math.min(1, (slope - 0.22) * 2.6)) * 0.9);
+  }
+  if (biome.gravel !== undefined) out.lerp(_c.set(biome.gravel), Math.max(0, Math.min(1, n * 2.2 + 0.15)) * Math.max(0, 1 - slope * 3) * 0.55);
   if (waterLevel !== null) {
     const above = h - waterLevel;
     if (above < 1.5) out.lerp(new THREE.Color(biome.vegetation === 'bare' ? 0xf4f1e8 : 0xe6d3a8), Math.max(0, 1 - above / 1.5) * 0.8);

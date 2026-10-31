@@ -95,12 +95,25 @@ export interface Biome {
   grassColor: number;
   /** 0..1 how green the hills read. */
   greenness: number;
+  /** Bare sedimentary layers shown on steep slopes in dry country (makhtesh, canyon and rift walls). */
+  strata?: number[];
+  /** Desert pavement (hamada) patches on flat ground. */
+  gravel?: number;
+  /** Ground below this height (m) takes `color`: the floor of a makhtesh reads apart from the plateau. */
+  floor?: { belowM: number; color: number };
 }
+
+const STRATA: Partial<Record<Rock, number[]>> = {
+  limestone: [0xe6d6b0, 0xd2a86a, 0xefe6d4, 0xc79a72, 0xe2c88e],
+  chalk: [0xf0ead8, 0xe0d4b4, 0xf6f2e6, 0xd8c8a2],
+  sandstone: [0xc0705a, 0xe2b070, 0x9a7a8e, 0xd89060, 0xefe0c0],
+  marl_salt: [0xd8ccb0, 0xc0b49a, 0xe8e0cc, 0xb8a888],
+};
 
 const ROCK_COLORS: Record<Rock, [number, number]> = {
   limestone: [0xd9c79e, 0xe8dcc0],
   chalk: [0xe8e2d0, 0xf2eee2],
-  basalt: [0x4a4440, 0x2b2a2b],
+  basalt: [0x56504b, 0x4a4542],
   kurkar: [0xc79a6b, 0xb98656],
   sand: [0xe9d6a9, 0xd8bf8c],
   granite: [0xb0654a, 0x8f4a38],
@@ -116,5 +129,8 @@ export function biomeOf(mm: number, rock: Rock, elevM: number, landforms: readon
   const density: Record<Vegetation, number> = { maquis: 9, batha: 4, desert: 0.9, acacia: 0.5, dune: 1.6, oasis: 7, bare: 0.05 };
   const trees: Record<Vegetation, number> = { maquis: 0.35, batha: 0.05, desert: 0, acacia: 0.25, dune: 0.02, oasis: 0.45, bare: 0 };
   const grass = greenness > 0.5 ? 0x7f9a4a : greenness > 0.25 ? 0xa7a560 : 0xc2ac78;
-  return { vegetation: veg, plantDensity: density[veg], treeShare: trees[veg], groundColor: ground, rockColor: rockC, grassColor: grass, greenness };
+  const dry = greenness < 0.25;
+  // The Ramon floor shows its colourful sandstones and clays under the limestone rim.
+  const strata = dry ? (landforms.includes('makhtesh') ? [...STRATA.limestone!, 0xb46a4a, 0x9a8a8e, 0xe2c070] : STRATA[rock]) : undefined;
+  return { vegetation: veg, plantDensity: density[veg], treeShare: trees[veg], groundColor: ground, rockColor: rockC, grassColor: grass, greenness, strata, gravel: dry && rock !== 'sand' && veg !== 'dune' ? 0x9c8466 : undefined };
 }

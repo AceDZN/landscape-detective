@@ -65,6 +65,7 @@ export class PostcardWorld {
   readonly night: boolean;
   lookout = new THREE.Vector3();
   lookoutTop = 12.2;
+  lookoutObj: THREE.Object3D | null = null;
   spawn = new THREE.Vector3();
   heading: number;
   private water: THREE.Mesh[] = [];
@@ -83,9 +84,10 @@ export class PostcardWorld {
     this.night = !!postcard.night;
     const detail = place.rock === 'sand' || place.landforms.includes('dunes') ? 1.6 : place.rock === 'basalt' ? 0.9 : 0.6;
     this.field = new TerrainField(patch, detail);
+    if (place.landforms.includes('makhtesh')) this.biome.floor = { belowM: patch.centre() - (place.id.includes('floor') ? -15 : 60), color: 0xa8745a };
     this.heading = place.startHeadingDeg ?? 0;
     this.waterLevel = this.computeWaterLevel();
-    this.field.seaShelf = this.waterLevel === 0;
+    this.field.shelf = this.waterLevel;
 
     // Cosmetic terrain edits that a landform needs (sinkholes are pits in the shore).
     if (place.landforms.includes('sinkholes')) {
@@ -187,7 +189,7 @@ export class PostcardWorld {
       for (let i = 0; i < n * 8 && k < n; i++) {
         const a = r() * Math.PI * 2, d = dMin + r() * (dMax - dMin);
         const x = Math.sin(a) * d, z = -Math.cos(a) * d;
-        if (!this.dry(x, z, 1) || !ok(x, z) || this.lookout.distanceTo(new THREE.Vector3(x, this.lookout.y, z)) < 9) continue;
+        if (!this.dry(x, z, 1) || !ok(x, z) || this.inView(x, z, 30) || this.lookout.distanceTo(new THREE.Vector3(x, this.lookout.y, z)) < 9) continue;
         put(x, z, k++);
       }
     };
@@ -255,9 +257,16 @@ export class PostcardWorld {
     }
     if (wl >= -1) return 0;
     // Lakes: the relief (SRTM, 2000) has its own flat lake surface; sit just above it.
+    // Use the commonest low value (the flat surface), not a single deep pixel.
+    const counts = new Map<number, number>();
     let min = Infinity;
     for (let i = 0; i < this.patch.data.length; i++) min = Math.min(min, this.patch.data[i] / 10);
-    return Math.max(wl, min + 0.6);
+    for (let i = 0; i < this.patch.data.length; i++) {
+      const m = Math.round(this.patch.data[i] / 10);
+      if (m < min + 10) counts.set(m, (counts.get(m) ?? 0) + 1);
+    }
+    const surface = [...counts].sort((a, b) => b[1] - a[1])[0][0];
+    return Math.max(wl, surface + 0.6);
   }
 
   private buildSky(sunElev: number) {
@@ -321,6 +330,15 @@ export class PostcardWorld {
     }
   }
 
+  /** Keeps the opening view clear: true for spots close in front of the start heading. */
+  private inView(x: number, z: number, dist = 40) {
+    const d = Math.hypot(x, z);
+    if (d > dist) return false;
+    const a = (Math.atan2(x, -z) * 180) / Math.PI;
+    const diff = Math.abs(((a - this.heading + 540) % 360) - 180);
+    return diff < 60;
+  }
+
   private dry(x: number, z: number, margin = 0.6) {
     return this.waterLevel === null || this.heightAt(x, z) > this.waterLevel + margin;
   }
@@ -354,6 +372,7 @@ export class PostcardWorld {
     } else t = lookoutTower();
     t.position.set(best.x, y, best.z);
     this.group.add(t);
+    this.lookoutObj = t;
     this.lookout.set(best.x, y, best.z);
   }
 
@@ -433,7 +452,7 @@ export class PostcardWorld {
       let j = 0;
       for (let i = 0; i < n * 6 && j < n; i++) {
         const x = (r() * 2 - 1) * 380, z = (r() * 2 - 1) * 380;
-        if (Math.hypot(x, z) < 10 || !this.dry(x, z, 1) || this.slope(x, z) > 0.7) continue;
+        if (Math.hypot(x, z) < 10 || this.inView(x, z, 45) || !this.dry(x, z, 1) || this.slope(x, z) > 0.7) continue;
         if (kind === 'acacia' || kind === 'tamarisk') {
           // Desert trees grow in the channels: prefer low ground.
           const around = (this.heightAt(x + 25, z) + this.heightAt(x - 25, z) + this.heightAt(x, z + 25) + this.heightAt(x, z - 25)) / 4;
@@ -460,6 +479,7 @@ export class PostcardWorld {
       const x = (r() * 2 - 1) * 260, z = (r() * 2 - 1) * 260;
       if (Math.hypot(x, z) < 6 || !this.dry(x, z, 0.5)) continue;
       const sc = (0.5 + r() * 1.6) * (this.place.rock === 'basalt' ? 1 : 1.2);
+      if (sc > 1.1 && this.inView(x, z, 25)) continue;
       p.set(x, this.heightAt(x, z) - 0.15 * sc, z);
       q.setFromEuler(new THREE.Euler(r() * 0.4, r() * 6.28, r() * 0.4));
       s.set(sc, sc, sc);

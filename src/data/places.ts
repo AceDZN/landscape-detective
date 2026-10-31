@@ -98,8 +98,8 @@ export const PLACES: Place[] = [
   {
     id: 'dor_coast',
     nameHe: 'חוף דור',
-    lat: 32.61,
-    lon: 34.92,
+    lat: 32.6097,
+    lon: 34.9215,
     rock: 'kurkar',
     vegetation: 'maquis',
     rainMm: 600,
@@ -108,7 +108,7 @@ export const PLACES: Place[] = [
     landforms: ['sea_west', 'kurkar_ridge'],
     culture: [],
     waterLevelM: 0,
-    startHeadingDeg: 270,
+    startHeadingDeg: 285,
     revealHe: 'רכסי כורכר נמוכים ומפרצונים של חול, והכרמל במזרח → חוף הכרמל',
     modules: ['/geography/grade-8/chapter-5/landforms', '/geography/grade-9/chapter-2/landform-belts'],
     sources: [
@@ -543,8 +543,8 @@ export const PLACES: Place[] = [
   {
     id: 'ein_gedi_shore',
     nameHe: 'חוף ים המלח בעין גדי',
-    lat: 31.42,
-    lon: 35.392,
+    lat: 31.4206,
+    lon: 35.3879,
     rock: 'marl_salt',
     vegetation: 'bare',
     rainMm: 50,
@@ -553,7 +553,7 @@ export const PLACES: Place[] = [
     landforms: ['salt_lake'],
     culture: [],
     waterLevelM: -435,
-    startHeadingDeg: 90,
+    startHeadingDeg: 100,
     revealHe: 'מד הגובה מראה יותר מ-400 מ\' מתחת לפני הים, מלח ומצוקים → חוף ים המלח, הנקודה היבשתית הנמוכה בעולם',
     modules: ['/geography/grade-9/chapter-2/landform-belts', '/geography/grade-8/chapter-5/landforms'],
     sources: [
@@ -587,8 +587,8 @@ export const PLACES: Place[] = [
   {
     id: 'mineral_sinkholes',
     nameHe: 'בולענים בחוף מינרל, ים המלח',
-    lat: 31.54,
-    lon: 35.398,
+    lat: 31.5406,
+    lon: 35.3981,
     rock: 'marl_salt',
     vegetation: 'bare',
     rainMm: 90,
@@ -597,7 +597,7 @@ export const PLACES: Place[] = [
     landforms: ['salt_lake', 'rift_cliffs', 'sinkholes'],
     culture: [],
     waterLevelM: -435,
-    startHeadingDeg: 90,
+    startHeadingDeg: 190,
     revealHe: 'בורות שנפתחו בחוף שהים נסוג ממנו → בולעני ים המלח: המסת שכבות מלח בעקבות ירידת המפלס. זה לא מכתש',
     modules: ['/geography/grade-8/chapter-5/landforms'],
     sources: [
@@ -715,7 +715,7 @@ export const PLACES: Place[] = [
   {
     id: 'coral_beach',
     nameHe: 'חוף האלמוגים, אילת',
-    lat: 29.51,
+    lat: 29.5108,
     lon: 34.925,
     rock: 'granite',
     vegetation: 'acacia',
@@ -725,7 +725,7 @@ export const PLACES: Place[] = [
     landforms: ['wadi', 'granite_peaks'],
     culture: [],
     waterLevelM: 0,
-    startHeadingDeg: 90,
+    startHeadingDeg: 180,
     revealHe: 'ים במזרח ולא במערב, הרי גרניט אדומים מאחור → מפרץ אילת, הקצה הדרומי של הבקע',
     modules: ['/geography/grade-9/chapter-2/landform-belts', '/geography/grade-8/chapter-4/rocks-minerals'],
     sources: [
@@ -737,8 +737,8 @@ export const PLACES: Place[] = [
   {
     id: 'kinneret_tiberias',
     nameHe: 'חוף הכנרת דרומית לטבריה',
-    lat: 32.77,
-    lon: 35.553,
+    lat: 32.7681,
+    lon: 35.5511,
     rock: 'basalt',
     vegetation: 'maquis',
     rainMm: 430,
@@ -747,7 +747,7 @@ export const PLACES: Place[] = [
     landforms: ['fresh_lake'],
     culture: [],
     waterLevelM: -211,
-    startHeadingDeg: 90,
+    startHeadingDeg: 40,
     revealHe: 'אגם מים מתוקים, חלוקי בזלת וכ-200 מ\' מתחת לפני הים → הכנרת בבקע',
     modules: ['/geography/grade-9/chapter-2/natural-water-sources', '/geography/grade-9/chapter-2/landform-belts'],
     sources: [
@@ -759,8 +759,8 @@ export const PLACES: Place[] = [
   {
     id: 'jordan_inflow_kinneret',
     nameHe: 'שפך הירדן לכנרת',
-    lat: 32.892,
-    lon: 35.625,
+    lat: 32.8926,
+    lon: 35.6256,
     rock: 'basalt',
     vegetation: 'maquis',
     rainMm: 490,
@@ -769,7 +769,7 @@ export const PLACES: Place[] = [
     landforms: ['fresh_lake', 'rift_cliffs'],
     culture: [],
     waterLevelM: -211,
-    startHeadingDeg: 180,
+    startHeadingDeg: 220,
     revealHe: 'נהר נשפך לאגם מתוק מתחת לפני הים, בזלת מסביב → צפון הכנרת, היכן שהירדן מגיע מן החרמון',
     modules: ['/geography/grade-9/chapter-2/natural-water-sources'],
     sources: [

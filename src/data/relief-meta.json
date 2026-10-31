@@ -35,7 +35,7 @@
    "maxM": 51
   },
   "dor_coast": {
-   "centerM": 0,
+   "centerM": 3,
    "minM": -7,
    "maxM": 31
   },
@@ -140,9 +140,9 @@
    "maxM": 178
   },
   "ein_gedi_shore": {
-   "centerM": -412,
+   "centerM": -407,
    "minM": -417,
-   "maxM": -51
+   "maxM": 226
   },
   "kalya_north_dead_sea": {
    "centerM": -398,
@@ -150,8 +150,8 @@
    "maxM": -329
   },
   "mineral_sinkholes": {
-   "centerM": -415,
-   "minM": -425,
+   "centerM": -411,
+   "minM": -422,
    "maxM": 277
   },
   "sodom_shore": {
@@ -180,19 +180,19 @@
    "maxM": 263
   },
   "coral_beach": {
-   "centerM": 1,
+   "centerM": 3,
    "minM": -3,
    "maxM": 261
   },
   "kinneret_tiberias": {
-   "centerM": -213,
+   "centerM": -208,
    "minM": -216,
-   "maxM": 243
+   "maxM": 242
   },
   "jordan_inflow_kinneret": {
-   "centerM": -212,
+   "centerM": -210,
    "minM": -220,
-   "maxM": -21
+   "maxM": -14
   },
   "golan_bental": {
    "centerM": 905,
