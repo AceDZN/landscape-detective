@@ -729,7 +729,7 @@ bdi,
   font-size: 28px;
 }
 .slot.next {
-  box-shadow: 0 0 0 4px #b8e070, 0 0 20px #b8e070;
+  box-shadow: inset 0 0 0 3px #b8e070, 0 0 10px rgba(184, 224, 112, 0.75);
 }
 .album-foot {
   display: flex;
