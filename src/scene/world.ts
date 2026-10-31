@@ -234,6 +234,19 @@ export class PostcardWorld {
     }
   }
 
+  /** See-through tower while the camera climbs inside it (1 = solid). */
+  fadeLookout(alpha: number) {
+    this.lookoutObj?.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh) return;
+      if (!m.userData.fadeMat) m.userData.fadeMat = m.material = (m.material as THREE.Material).clone();
+      const mat = m.material as THREE.Material;
+      mat.transparent = alpha < 1;
+      mat.opacity = alpha;
+      mat.depthWrite = alpha >= 1;
+    });
+  }
+
   heightAt(x: number, z: number) {
     return this.field.height(x, z);
   }

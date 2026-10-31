@@ -195,6 +195,7 @@ export class Explorer {
     this.mode = 'climb';
     this.modeT = 0;
     this.ranger?.play('climb');
+    this.world.fadeLookout(0.3);
     return true;
   }
 
@@ -279,6 +280,7 @@ export class Explorer {
         this.target = null;
         this.mode = 'walk';
         if (w.lookoutObj) w.lookoutObj.visible = true;
+        w.fadeLookout(1);
         p.set(w.lookout.x + 2.5, w.heightAt(w.lookout.x + 2.5, w.lookout.z), w.lookout.z);
       }
     } else if (this.mode === 'kite') {
