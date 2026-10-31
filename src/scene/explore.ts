@@ -151,11 +151,11 @@ export class Explorer {
   }
 
   private placeIbex() {
-    // On a rise in front of the start, 60–120 m away.
-    let best = new THREE.Vector3(0, -1e9, -80);
-    for (let k = -6; k <= 6; k++) {
+    // On a rise just ahead and off to one side of the start, close enough to read on screen.
+    let best = new THREE.Vector3(0, -1e9, -30);
+    for (const k of [-5, -4, -3, -2, 2, 3, 4, 5]) {
       const a = this.yaw + k * 0.12;
-      for (const d of [55, 75, 95, 115]) {
+      for (const d of [22, 28, 34, 40]) {
         const x = Math.sin(a) * d, z = -Math.cos(a) * d;
         const h = this.world.heightAt(x, z);
         if (this.world.waterLevel !== null && h < this.world.waterLevel + 1) continue;

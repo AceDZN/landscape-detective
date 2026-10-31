@@ -689,10 +689,11 @@ export class PostcardWorld {
     const towers = c.includes('glass_towers');
     const stone = c.includes('stone_houses');
     const dense = c.includes('dense_town') || towers;
-    const nHouses = dense ? 70 : c.includes('sparse_town') ? 14 : c.includes('stone_houses') || c.includes('church') ? 40 : 0;
+    const nHouses = dense ? 150 : c.includes('sparse_town') ? 14 : c.includes('stone_houses') || c.includes('church') ? 40 : 0;
     for (let i = 0; i < nHouses; i++) {
       const ang = front + (r() - 0.5) * (dense ? 300 : 160);
-      const d = 35 + r() * (dense ? 300 : 220);
+      // Dense towns pack in (square-root spread keeps the middle full); from the kite they read as one built-up block.
+      const d = 35 + (dense ? Math.sqrt(r()) * 230 : r() * 220);
       const a = (ang * Math.PI) / 180;
       const x = Math.sin(a) * d, z = -Math.cos(a) * d;
       if (!this.dry(x, z, 1) || this.slope(x, z) > 0.6 || Math.hypot(x, z) < 25) continue;
