@@ -36,6 +36,8 @@ export interface Anchor {
 }
 
 export const WALK_HALF = 160;
+/** Deck height of the Tripo lookout as a share of its height (measured in scene). */
+const LOOKOUT_DECK = 0.55;
 
 function rng(seed: number) {
   let a = seed >>> 0;
@@ -56,6 +58,7 @@ export class PostcardWorld {
   readonly sunDir: THREE.Vector3;
   readonly sunLight: THREE.DirectionalLight;
   readonly hemi: THREE.HemisphereLight;
+  readonly fill: THREE.DirectionalLight;
   readonly waterLevel: number | null;
   readonly skyColor: THREE.Color;
   readonly fogColor: THREE.Color;
@@ -82,6 +85,7 @@ export class PostcardWorld {
     this.field = new TerrainField(patch, detail);
     this.heading = place.startHeadingDeg ?? 0;
     this.waterLevel = this.computeWaterLevel();
+    this.field.seaShelf = this.waterLevel === 0;
 
     // Cosmetic terrain edits that a landform needs (sinkholes are pits in the shore).
     if (place.landforms.includes('sinkholes')) {
@@ -114,8 +118,11 @@ export class PostcardWorld {
     this.sunLight.shadow.bias = -0.0005;
     this.sunLight.shadow.normalBias = 0.6;
     this.group.add(this.sunLight, this.sunLight.target);
-    this.hemi = new THREE.HemisphereLight(this.night ? 0x40507a : this.skyColor, this.night ? 0x101418 : new THREE.Color(this.biome.groundColor), this.night ? 0.55 : 1.1);
+    this.hemi = new THREE.HemisphereLight(this.night ? 0x40507a : this.skyColor, this.night ? 0x101418 : new THREE.Color(this.biome.groundColor).lerp(new THREE.Color(0xffc890), golden * 0.5), this.night ? 0.6 : 1.5 + golden * 0.5);
     this.group.add(this.hemi);
+    // Soft fill from the camera side so backlit golden-hour shots keep their colour (painterly, not physical).
+    this.fill = new THREE.DirectionalLight(this.night ? 0x6070a0 : 0xffe2c0, this.night ? 0.25 : 0.55 + golden * 0.5);
+    this.group.add(this.fill, this.fill.target);
     this.buildSky(elevation);
 
     // Terrain
@@ -130,6 +137,99 @@ export class PostcardWorld {
     this.scatter();
     this.dressLandforms();
     this.dressCulture();
+    this.dressModels();
+  }
+
+  /** Tripo dressing a place uses, so the app can preload them before building the world. */
+  static modelsFor(place: Place): string[] {
+    const n = new Set<string>(['lookout_tower']);
+    const c = place.culture, lf = place.landforms;
+    if (place.rock === 'basalt' || lf.includes('basalt_plateau')) n.add('basalt_boulders').add('field_wall');
+    if (['limestone', 'chalk', 'kurkar', 'granite', 'sandstone'].includes(place.rock) || lf.includes('kurkar_ridge')) n.add('rocks');
+    if (place.vegetation === 'acacia') n.add('acacia');
+    if (place.vegetation === 'oasis') n.add('date_palm').add('acacia');
+    if (place.vegetation === 'maquis' || place.vegetation === 'batha' || c.includes('olive_groves')) n.add('olive').add('cypress');
+    if (lf.includes('terraces')) n.add('terrace_wall');
+    if (c.includes('church')) n.add('church_tower');
+    if (c.includes('mosque')) n.add('minaret');
+    if (c.includes('old_market')) n.add('market_stall');
+    if (c.includes('stone_houses')) n.add('house');
+    if (c.includes('glass_towers') || c.includes('chain_stores')) n.add('fan_palm');
+    return [...n];
+  }
+
+  /** A grounded Tripo prop (null when the model is missing: the procedural dressing still stands). */
+  private prop(name: string, x: number, z: number, o: { h?: number; yaw?: number; tint?: number; sink?: number } = {}): THREE.Object3D | null {
+    const inst = this.models.instance(name, o.h);
+    if (!inst) return null;
+    const root = inst.root;
+    root.position.set(x, this.heightAt(x, z) - (o.sink ?? 0.15), z);
+    root.rotation.y = o.yaw ?? 0;
+    root.traverse((ob) => {
+      const m = ob as THREE.Mesh;
+      if (!m.isMesh) return;
+      m.frustumCulled = true;
+      if (o.tint !== undefined) {
+        const mat = (m.material as THREE.MeshStandardMaterial).clone();
+        mat.color.multiply(new THREE.Color(o.tint));
+        m.material = mat;
+      }
+    });
+    this.group.add(root);
+    return root;
+  }
+
+  /** Near-field Tripo dressing: boulders, trees, walls and landmark buildings. Cosmetic only. */
+  private dressModels() {
+    const pl = this.place, r = rng(91);
+    const ring = (n: number, dMin: number, dMax: number, ok: (x: number, z: number) => boolean, put: (x: number, z: number, i: number) => void) => {
+      let k = 0;
+      for (let i = 0; i < n * 8 && k < n; i++) {
+        const a = r() * Math.PI * 2, d = dMin + r() * (dMax - dMin);
+        const x = Math.sin(a) * d, z = -Math.cos(a) * d;
+        if (!this.dry(x, z, 1) || !ok(x, z) || this.lookout.distanceTo(new THREE.Vector3(x, this.lookout.y, z)) < 9) continue;
+        put(x, z, k++);
+      }
+    };
+    const gentle = (x: number, z: number) => this.slope(x, z) < 0.6;
+    if (pl.rock === 'basalt' || pl.landforms.includes('basalt_plateau')) {
+      ring(16, 8, 140, gentle, (x, z) => this.prop('basalt_boulders', x, z, { h: 0.8 + r() * 1.6, yaw: r() * 6.28, sink: 0.25 }));
+      // Dry-stone field walls of black basalt, as on the Golan.
+      const a0 = ((this.heading + 60) * Math.PI) / 180;
+      for (let i = 0; i < 6; i++) {
+        const d = 22 + i * 7.5;
+        const x = Math.sin(a0) * d, z = -Math.cos(a0) * d;
+        if (this.dry(x, z)) this.prop('field_wall', x, z, { h: 0.9, yaw: -a0 + Math.PI / 2, tint: 0x6a6664, sink: 0.1 });
+      }
+    }
+    const rockTint: Partial<Record<string, number>> = { kurkar: 0xe8a070, granite: 0xd07068, chalk: 0xffffff, sandstone: 0xe0907a, limestone: 0xf4ecdc };
+    const rk = pl.landforms.includes('kurkar_ridge') ? 'kurkar' : pl.rock;
+    if (rockTint[rk] !== undefined) ring(10, 8, 120, gentle, (x, z) => this.prop('rocks', x, z, { h: 0.7 + r() * 1.3, yaw: r() * 6.28, tint: rockTint[rk], sink: 0.2 }));
+    if (pl.vegetation === 'acacia') ring(9, 14, 160, gentle, (x, z) => this.prop('acacia', x, z, { h: 4.5 + r() * 2.5, yaw: r() * 6.28 }));
+    if (pl.vegetation === 'oasis') {
+      ring(9, 12, 110, gentle, (x, z) => this.prop('date_palm', x, z, { h: 8 + r() * 4, yaw: r() * 6.28 }));
+      ring(3, 20, 120, gentle, (x, z) => this.prop('acacia', x, z, { h: 5 + r() * 2, yaw: r() * 6.28 }));
+    }
+    if (pl.vegetation === 'maquis' || pl.vegetation === 'batha') {
+      ring(pl.vegetation === 'batha' ? 7 : 5, 12, 120, gentle, (x, z) => this.prop('olive', x, z, { h: 4 + r() * 2, yaw: r() * 6.28 }));
+      if (pl.culture.length) ring(4, 25, 140, gentle, (x, z) => this.prop('cypress', x, z, { h: 8 + r() * 4 }));
+    }
+    if (pl.landforms.includes('terraces')) {
+      // A few showpiece dry-stone panels on the nearest terrace step.
+      const a = (this.heading * Math.PI) / 180;
+      for (let i = -3; i <= 3; i++) {
+        const x = Math.sin(a) * 14 + Math.cos(a) * i * 2.4, z = -Math.cos(a) * 14 + Math.sin(a) * i * 2.4;
+        this.prop('terrace_wall', x, z, { h: 1.0, yaw: -a, sink: 0.3 });
+      }
+    }
+    if (pl.culture.includes('glass_towers') || pl.culture.includes('chain_stores')) {
+      const a = (this.heading * Math.PI) / 180;
+      for (let i = -3; i <= 3; i++) {
+        if (i === 0) continue;
+        const x = Math.sin(a) * 9 + Math.cos(a) * i * 9, z = -Math.cos(a) * 9 + Math.sin(a) * i * 9;
+        if (this.dry(x, z)) this.prop('fan_palm', x, z, { h: 10 + r() * 3, yaw: r() * 6.28 });
+      }
+    }
   }
 
   heightAt(x: number, z: number) {
@@ -181,7 +281,7 @@ export class PostcardWorld {
           vec3 c = mix(horizon, top, pow(y, 0.55));
           vec3 sd = normalize(night > 0.5 ? vec3(-0.4, 0.55, -0.5) : sunDir);
           float d = max(dot(normalize(vDir), sd), 0.0);
-          c += sunColor * (pow(d, 900.0) * 4.0 + pow(d, 12.0) * (night > 0.5 ? 0.05 : 0.35));
+          c += sunColor * (pow(d, 900.0) * 4.0 + pow(d, 16.0) * (night > 0.5 ? 0.05 : 0.18));
           if (night > 0.5) { vec3 q = floor(vDir * 300.0); float s = step(0.997, h(q)) * y; c += vec3(s); }
           if (vDir.y < 0.0) c = horizon;
           gl_FragColor = vec4(c, 1.0);
@@ -242,8 +342,16 @@ export class PostcardWorld {
         break;
       }
     }
-    const t = lookoutTower();
     const y = this.heightAt(best.x, best.z);
+    const H = 16;
+    const tower = this.models.instance('lookout_tower', H);
+    let t: THREE.Object3D;
+    if (tower) {
+      t = tower.root;
+      t.rotation.y = Math.atan2(-best.x, -best.z);
+      t.traverse((o) => ((o as THREE.Mesh).frustumCulled = true));
+      this.lookoutTop = H * LOOKOUT_DECK;
+    } else t = lookoutTower();
     t.position.set(best.x, y, best.z);
     this.group.add(t);
     this.lookout.set(best.x, y, best.z);
@@ -252,7 +360,7 @@ export class PostcardWorld {
   private scatter() {
     const b = this.biome;
     const r = rng(Math.floor(this.place.lat * 1000 + this.place.lon * 100));
-    const shrubMat = vertexMat();
+    const shrubMat = new THREE.MeshStandardMaterial({ roughness: 0.9, flatShading: true });
     const shrubColors: Record<string, number> = { maquis: 0x4f6b35, batha: 0x8a9466, desert: 0x9a9470, acacia: 0x8f8a62, dune: 0xa9b07a, oasis: 0x4f7a3a, bare: 0xb8b39a };
     const tint = new THREE.Color(shrubColors[b.vegetation]);
     const area = 2 * 380;
@@ -509,7 +617,14 @@ export class PostcardWorld {
         case 'loess_plain':
         case 'dunes': {
           const c = lf === 'kurkar_ridge' ? 0xc79a6b : lf === 'basalt_plateau' ? 0x3a3634 : lf === 'loess_plain' ? 0xc9ac82 : 0xe9d6a9;
-          if (lf !== 'dunes' && lf !== 'loess_plain') {
+          if (lf === 'basalt_plateau' && this.models.has('basalt_boulders')) {
+            const out = this.at(this.heading - 20, 14);
+            for (let i = 0; i < 4; i++) {
+              const ox = out.x + (r() - 0.5) * 10, oz = out.z + (r() - 0.5) * 10;
+              this.prop('basalt_boulders', ox, oz, { h: 1.2 + r() * 1.2, yaw: r() * 6.28, sink: 0.25 });
+            }
+            this.anchor(obs, out, 90, 35);
+          } else if (lf !== 'dunes' && lf !== 'loess_plain') {
             const mat = new THREE.MeshStandardMaterial({ color: c, roughness: 1, flatShading: true });
             const out = this.at(this.heading - 20, 14);
             for (let i = 0; i < 9; i++) {
@@ -561,23 +676,24 @@ export class PostcardWorld {
       const a = (ang * Math.PI) / 180;
       const x = Math.sin(a) * d, z = -Math.cos(a) * d;
       if (!this.dry(x, z, 1) || this.slope(x, z) > 0.6 || Math.hypot(x, z) < 25) continue;
-      const house = towers && r() < 0.4 ? glassTower(40 + r() * 80, 14 + r() * 12) : stone ? stoneHouse(7 + r() * 5, 7 + r() * 5, 2 + Math.floor(r() * 3), 0xe8dcc0) : c.includes('sparse_town') ? tiledHouse() : stoneHouse(8 + r() * 6, 8 + r() * 4, dense ? 3 + Math.floor(r() * 5) : 2, 0xf0ebe0);
+      const tripoHouse = stone && d < 140 && r() < 0.5 ? this.models.instance('house', 5 + r() * 3)?.root : undefined;
+      const house = tripoHouse ? tripoHouse : towers && r() < 0.4 ? glassTower(40 + r() * 80, 14 + r() * 12) : stone ? stoneHouse(7 + r() * 5, 7 + r() * 5, 2 + Math.floor(r() * 3), 0xe8dcc0) : c.includes('sparse_town') ? tiledHouse() : stoneHouse(8 + r() * 6, 8 + r() * 4, dense ? 3 + Math.floor(r() * 5) : 2, 0xf0ebe0);
       this.building(house, x, z);
     }
     if (c.includes('church')) {
       const p = this.at(front + 25, 70);
-      this.building(churchTower(), p.x, p.z);
+      this.building(this.models.instance('church_tower')?.root ?? churchTower(), p.x, p.z);
       this.anchor({ kind: 'culture', sign: 'church' }, p.clone().setY(p.y + 15), 600, 18);
     }
     if (c.includes('mosque')) {
       const p = this.at(front - 30, 85);
-      this.building(minaret(), p.x, p.z);
+      this.building(this.models.instance('minaret', 22)?.root ?? minaret(), p.x, p.z);
       this.anchor({ kind: 'culture', sign: 'mosque' }, p.clone().setY(p.y + 18), 600, 18);
     }
     if (c.includes('old_market')) {
       for (let i = 0; i < 6; i++) {
         const p = this.at(front - 8 + i * 4, 16 + (i % 2) * 5);
-        this.building(marketStall([0xc0503a, 0x3a7a9a, 0xd9a030][i % 3]), p.x, p.z, new THREE.Vector3(0, 0, 0));
+        this.building((i % 2 ? this.models.instance('market_stall')?.root : null) ?? marketStall([0xc0503a, 0x3a7a9a, 0xd9a030][i % 3]), p.x, p.z, new THREE.Vector3(0, 0, 0));
       }
       this.anchor({ kind: 'culture', sign: 'old_market' }, this.at(front, 18), 90, 30);
     }
@@ -659,8 +775,12 @@ export class PostcardWorld {
     }
   }
 
-  update(dt: number, focus: THREE.Vector3) {
+  update(dt: number, focus: THREE.Vector3, camPos?: THREE.Vector3) {
     this.t += dt;
+    if (camPos) {
+      this.fill.position.copy(camPos).add(new THREE.Vector3(0, 20, 0));
+      this.fill.target.position.copy(focus);
+    }
     // Keep the shadow frustum around the player.
     this.sunLight.position.copy(focus).addScaledVector(this.night ? new THREE.Vector3(-0.4, 0.55, -0.5).normalize() : this.sunDir, 250);
     this.sunLight.target.position.copy(focus);

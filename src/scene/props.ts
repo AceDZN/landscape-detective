@@ -7,8 +7,9 @@ const flat = (color: number, extra: Partial<THREE.MeshStandardMaterialParameters
 
 function jitter(geo: THREE.BufferGeometry, amt: number, seed: number) {
   const p = geo.attributes.position as THREE.BufferAttribute;
+  // Hash by position, not index: polyhedra are non-indexed, so shared corners must move together or faces split into shards.
   for (let i = 0; i < p.count; i++) {
-    const k = Math.sin(i * 12.9898 + seed * 78.233) * 43758.5453;
+    const k = Math.sin(Math.round(p.getX(i) * 1000) * 12.9898 + Math.round(p.getY(i) * 1000) * 4.1414 + Math.round(p.getZ(i) * 1000) * 7.13 + seed * 78.233) * 43758.5453;
     const r = (k - Math.floor(k)) * 2 - 1;
     p.setXYZ(i, p.getX(i) * (1 + r * amt), p.getY(i) * (1 + r * amt * 0.7), p.getZ(i) * (1 - r * amt));
   }

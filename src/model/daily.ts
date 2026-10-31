@@ -22,7 +22,7 @@ export function dailyCase(key: string): CaseDef {
     titleHe: `התיק היומי · ${key}`,
     introHe: 'חמש גלויות חדשות מכל הארץ. שלושה כלים לכל גלויה — בחרו בחוכמה.',
     postcards: pick.map((placeId, i) => ({ placeId, season: seasons[i % 4], hour: 9 + i * 1.5 })),
-    charges: 10,
+    charges: 15,
     hints: true,
     starKm: DAILY_STAR_KM,
     intended: pick.map(() => DAILY_CLUES),

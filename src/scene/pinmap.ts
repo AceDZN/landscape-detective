@@ -45,7 +45,7 @@ export class PinMap {
 
   constructor(readonly country: CountryRelief, models: ModelLib) {
     this.scene.background = new THREE.Color(0x2b2420);
-    this.scene.fog = new THREE.Fog(0x2b2420, 900, 2400);
+    this.scene.fog = new THREE.Fog(0x2b2420, 1200, 3200);
     const sun = new THREE.DirectionalLight(0xfff0d8, 2.4);
     sun.position.set(-300, 260, -120); // low from the west: relief reads strongly
     this.scene.add(sun, new THREE.HemisphereLight(0xdfe8f0, 0x5a4a38, 0.9));
@@ -204,14 +204,14 @@ export class PinMap {
     const tex = new THREE.CanvasTexture(cv);
     tex.colorSpace = THREE.SRGBColorSpace;
     const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
-    s.scale.set(56, 14, 1);
+    s.scale.set(30, 7.5, 1);
     return s;
   }
 
   resetView() {
     this.flight = null;
-    this.focus.set(5, 0, 10);
-    this.camDist = 560;
+    this.focus.set(5, 0, 25);
+    this.camDist = 820;
     this.camPitch = 1.12;
     this.camYaw = 0;
     this.pin.visible = false;
@@ -297,7 +297,7 @@ export class PinMap {
     this.arc.userData.t = 0;
     this.scene.add(this.arc);
     const startD = this.camDist;
-    this.flight = { from: this.focus.clone(), to: t.clone(), d0: startD, d1: Math.max(110, Math.min(380, len * 2.2 + 90)), t: 0, dur };
+    this.flight = { from: this.focus.clone(), to: t.clone(), d0: startD, d1: Math.max(200, Math.min(420, len * 2.2 + 170)), t: 0, dur };
     // Ibex on a ridge near the truth: close pins catch it, far pins let it laugh further away.
     const off = new THREE.Vector3(6 + gap * 9, 0, -4 - gap * 6);
     const ip = t.clone().add(off);
@@ -368,6 +368,6 @@ export class PinMap {
 
   zoom(delta: number) {
     if (this.flying) return;
-    this.camDist = THREE.MathUtils.clamp(this.camDist * (1 + delta * 0.0012), 70, 700);
+    this.camDist = THREE.MathUtils.clamp(this.camDist * (1 + delta * 0.0012), 70, 950);
   }
 }

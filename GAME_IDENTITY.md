@@ -29,12 +29,12 @@ Checked against `/Users/acedzn/idea-plotter/reports/geography-games-claude-2026-
 
 | Existing game / sim | Its core interaction | What Landscape Detective does instead | Banned here |
 |---|---|---|---|
-| IsraelLandscapeMixerLab (landscape-diversity) | Dials for altitude, rain, distance from sea, rock build a landscape; recreate Hermon/coast/Negev | The landscape is given and fixed; you *infer* where it is from evidence you choose to collect | Any dial or slider that sets a landscape factor |
-| IsraelRainTransectLab (israel-climate) | Move a marker on a transect, set altitude/distance from sea, read rain | Rain is one *measured* clue (rain gauge, ±20 %) in a place you cannot change; you pin a 2D map location | Moving a probe to read rain off a transect |
-| CulturalLandscapeReaderLab (cultural-landscapes) | Place cultural-sign tiles on a street, read cause families | You walk a street that already exists and look | Tiles, building a scene |
-| GlobalLandscapeSpotterLab (global-landscapes) | Sort tiles into global vs. local bins | A global street is evidence that *doesn't* locate you, so you spend tools on physical clues | Sorting into bins |
+| IsraelLandscapeMixerLab (landscape-diversity) | Sliders for altitude, rain and distance from sea plus three rock buttons build a landscape; five targets (coast, maquis, Hermon, Negev, Jordan rift) | The landscape is given and fixed; you *infer* where it is from evidence you choose to collect | Any dial or slider that sets a landscape factor |
+| IsraelRainTransectLab (israel-climate) | Drag a marker on a transect, set altitude/distance-from-sea sliders, read rain; missions >800 mm, aridity-line steppe, <100 mm | Rain is one *measured* clue (rain gauge, ±20 %) in a place you cannot change; you pin a 2D map location | Moving a probe to read rain off a transect |
+| CulturalLandscapeReaderLab (cultural-landscapes) | Tap sign tiles onto a street; each lights one of four cause groups; challenges match Nazareth, Jerusalem, a Negev Bedouin village | You walk a street that already exists, look, and pin where it is on a map (case 16 shares Nazareth and Jerusalem, so the difference is the verbs: walk, look, pin) | Tiles, building a scene, cause-group meters |
+| GlobalLandscapeSpotterLab (global-landscapes) | Sort tiles into global vs. local bins; build a street from tiles against a globality meter | A global street is evidence that *doesn't* locate you, so you spend tools on physical clues | Sorting into bins, building a street from tiles |
 | CulturalLandscapeMosaicLab / IsraelPopulationMosaicLab | Paint groups onto a grid / toggle factors and watch dots | Settlement density is seen from the kite camera and pinned | Painting, factor toggles |
-| IsraelLandformBeltsLab (landform-belts) | Drag process chips onto belt slots | Belts appear only as the reveal overlay after you commit | Chips, slots |
+| IsraelLandformBeltsLab (landform-belts) | Drag or tap process chips onto belts (with decoys); the cross-section morphs to its real profile | Belts appear only as the reveal overlay after you commit | Chips, slots |
 | RockCycleExplorer (rocks-minerals) | Click processes on a cycle wheel | The rock hammer reads the rock in front of you | Cycle wheels |
 | RiverFlowSculptorLab / WeatheringErosionLab (landforms) | Sculpt rivers and erosion | Landforms are read, never shaped | Terrain editing |
 | TradeRouteBridgeLab (israel-middle-east) | Follow historic route stops | Postcards are independent drops, no route | Route-following journeys |

@@ -75,9 +75,9 @@ export class App {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
     this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.05;
+    this.renderer.toneMappingExposure = 1.12;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.root.prepend(this.renderer.domElement);
     this.root.insertAdjacentHTML('beforeend', `<div class="vignette"></div><div class="frame"></div><div class="stamp" aria-hidden="true">🐐</div>`);
@@ -134,7 +134,7 @@ export class App {
     if (this.session) this.session.clock = this.time;
     if (this.mode === 'explore' && this.explorer && this.world) {
       this.explorer.update(dt);
-      this.world.update(dt, this.explorer.player.position);
+      this.world.update(dt, this.explorer.player.position, this.camera.position);
       this.updateExploreHud();
     }
     if (this.mode === 'map' || this.mode === 'reveal') this.pinmap.update(dt);
@@ -282,12 +282,12 @@ export class App {
     const place = s.placeOf(idx);
     const pc = s.def.postcards[idx];
     const patch = await this.patchFor(place);
-    await this.models.preload(['ranger', 'ibex']);
+    await this.models.preload(['ranger', 'ibex', ...PostcardWorld.modelsFor(place)]);
     if (token !== this.loadingToken) return;
     this.clearWorld();
     this.world = new PostcardWorld(place, pc, patch, this.relief, this.models);
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog(this.world.fogColor, 300, pc.night ? 4000 : 26000);
+    this.scene.fog = new THREE.Fog(this.world.fogColor, pc.night ? 200 : 900, pc.night ? 5000 : 30000);
     this.scene.add(this.world.group);
     this.explorer = new Explorer(this.world, this.camera, this.models, {
       onNotice: (o) => this.onNotice(o),
@@ -759,6 +759,7 @@ export class App {
       return this.textState();
     };
     w.__ld = this;
+    w.__ld_cases = CASES;
   }
 
   /** Test helper: where a lat/lon appears on screen in the map view (to aim a real click). */

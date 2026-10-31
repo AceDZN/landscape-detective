@@ -56,16 +56,20 @@ export interface TerrainEdit {
 
 export class TerrainField {
   edits: TerrainEdit[] = [];
+  /** Coastal patches: SRTM reads ~0 m on the water, so let the beach shelve under the sea surface. */
+  seaShelf = false;
   constructor(readonly patch: PatchRelief, readonly detail: number) {}
 
   base(x: number, z: number) {
-    return smoothPatch(this.patch, x, z);
+    const h = smoothPatch(this.patch, x, z);
+    return this.seaShelf && h < 0.8 ? h - (0.8 - h) * 3 : h;
   }
 
   height(x: number, z: number): number {
     let h = this.base(x, z);
     const edge = Math.max(Math.abs(x), Math.abs(z));
     const fade = Math.max(0, Math.min(1, (NEAR_HALF - edge) / 80));
+    if (this.seaShelf && h < 0.3) return h;
     if (fade > 0) h += fbm(x / 9, z / 9, 3) * this.detail * fade + fbm(x / 1.7, z / 1.7, 2) * this.detail * 0.18 * fade;
     for (const e of this.edits) {
       const d = Math.hypot(x - e.x, z - e.z);

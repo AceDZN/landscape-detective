@@ -363,7 +363,7 @@ export const PLACES: Place[] = [
     landforms: [],
     culture: [],
     startHeadingDeg: 45,
-    revealHe: 'גיר, כמעט 1,000 מ\' וכ-950 מ"מ גשם → מורדות החרמון, ההר הגבוה שבשליטת ישראל',
+    revealHe: 'גיר, כמעט 1,000 מ\' וכ-950 מ"מ גשם → מורדות החרמון: השלג והגשם שלו מזינים את מעיינות הירדן',
     modules: ['/geography/grade-9/chapter-2/landscape-diversity', '/geography/grade-9/chapter-2/israel-climate', '/geography/grade-9/chapter-2/natural-water-sources'],
     sources: [
       'IMS 1991–2020 normals (season summary 2021/22): נווה אטי״ב 947 mm (0 km), מבצר נמרוד 816 mm (2 km); IDW of the 6 nearest stations = 947 mm',
@@ -704,7 +704,7 @@ export const PLACES: Place[] = [
     landforms: ['wadi'],
     culture: [],
     startHeadingDeg: 270,
-    revealHe: 'ערוץ רחב ויבש עם שיטים, כ-30 מ"מ גשם → נחל פארן: ואדי שמתמלא בשיטפון בדקות',
+    revealHe: 'ערוץ רחב ויבש עם שיטים, כ-30 מ"מ גשם → נחל פארן: ואדי, ערוץ יבש שזורמים בו מים רק בשיטפון',
     modules: ['/geography/grade-8/chapter-5/landforms', '/geography/grade-9/chapter-2/israel-climate'],
     sources: [
       'IMS 1991–2020 normals (season summary 2021/22): פארן 34 mm (0 km), נאות סמדר 30 mm (37 km); IDW of the 6 nearest stations = 34 mm',
@@ -917,7 +917,7 @@ export const PLACES: Place[] = [
     landforms: ['wadi', 'granite_peaks'],
     culture: [],
     startHeadingDeg: 90,
-    revealHe: 'גרניט אדום, שיטים ופחות מ-50 מ"מ גשם → הרי אילת: מהסלעים העתיקים בישראל',
+    revealHe: 'גרניט אדום, שיטים ופחות מ-50 מ"מ גשם → הרי אילת (העשרה: מהסלעים העתיקים בישראל)',
     modules: ['/geography/grade-8/chapter-4/rocks-minerals', '/geography/grade-9/chapter-2/israel-climate'],
     sources: [
       'IMS 1991–2020 normals (season summary 2021/22): אילת 22 mm (6 km), תמנע 25 mm (24 km); IDW of the 6 nearest stations = 22 mm',
@@ -928,8 +928,8 @@ export const PLACES: Place[] = [
   {
     id: 'ramon_rim',
     nameHe: 'שפת מכתש רמון',
-    lat: 30.6095,
-    lon: 34.8,
+    lat: 30.6079,
+    lon: 34.8059,
     rock: 'limestone',
     vegetation: 'desert',
     rainMm: 70,
@@ -937,8 +937,8 @@ export const PLACES: Place[] = [
     belt: 'negev',
     landforms: ['makhtesh', 'wadi'],
     culture: [],
-    startHeadingDeg: 180,
-    revealHe: 'שפה תלולה מעל שקע סגור, גיר קשה למעלה → מכתש רמון: נוצר בבליה ובסחיפה, לא מפגיעת מטאוריט ולא מהר געש',
+    startHeadingDeg: 135,
+    revealHe: 'שפה תלולה מעל שקע סגור, גיר קשה למעלה → מכתש רמון: נוצר משילוב של הרמת שכבות, סלע רך ונחל שסחף אותו, לא מפגיעת מטאוריט',
     modules: ['/geography/grade-8/chapter-5/landforms', '/geography/grade-9/chapter-2/landscape-diversity'],
     sources: [
       'IMS 1991–2020 normals (season summary 2021/22): מצפה רמון 70 mm (0 km), עבדת 84 mm (20 km); IDW of the 6 nearest stations = 70 mm',

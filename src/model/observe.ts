@@ -68,6 +68,7 @@ export function notebookLine(o: Observation): { label: string; value: string; nu
     case 'veg':
       return { label: TOOL_HE.guide.verb, value: VEG_HE[o.veg] };
     case 'alt':
+      if (o.m === 0) return { label: TOOL_HE.altimeter.verb, value: 'בערך בגובה פני הים', num: '0 מ׳' };
       return { label: TOOL_HE.altimeter.verb, value: o.m < 0 ? 'מתחת לפני הים' : 'מעל פני הים', num: `${o.m < 0 ? '−' : ''}${Math.abs(o.m)} מ׳` };
     case 'rain':
       return { label: TOOL_HE.rain.verb, value: 'בערך', num: `${o.mm} מ״מ` };
