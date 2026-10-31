@@ -109,11 +109,24 @@ export class App {
     this.exposeTestHooks();
     this.showAlbum();
     let last = performance.now();
+    // Adaptive resolution for slow school laptops: if frames stay slow while exploring, render fewer pixels.
+    let slow = 0, ema = 1 / 60;
     const loop = (now: number) => {
-      const dt = Math.min(0.05, (now - last) / 1000);
+      const raw = (now - last) / 1000;
+      const dt = Math.min(0.05, raw);
       last = now;
       if (!this.manualTime) this.step(dt);
       this.render();
+      if (this.mode === 'explore' && !this.paused && !document.hidden && raw < 0.5) {
+        ema += (raw - ema) * 0.05;
+        slow = ema > 1 / 32 ? slow + raw : 0;
+        const pr = this.renderer.getPixelRatio();
+        if (slow > 2 && pr > 0.75) {
+          this.renderer.setPixelRatio(Math.max(0.75, pr - 0.25));
+          this.resize();
+          slow = 0;
+        }
+      }
       requestAnimationFrame(loop);
     };
     requestAnimationFrame(loop);

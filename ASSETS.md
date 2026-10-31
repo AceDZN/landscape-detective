@@ -145,3 +145,15 @@ All bboxes are symmetric in X and Z; min y = 0. Considered and rejected: the ph-
 ## Visual targets (`docs/visual-targets/`)
 
 Four ChatGPT (gpt-image) mockups, 1672×941, all from one chat: https://chatgpt.com/c/6ae602db-afc8-83eb-9448-e6b8620a8410 (2026-10-31). Their exact prompts, SHA-256 hashes and "what's off" notes are in `docs/visual-targets/PROMPTS.md`. `CHECKLIST.md` turns them into camera, palette and HUD rules. They are references only and are not shipped.
+
+## Relief and data (shipped)
+
+| File | What | Source and licence |
+| --- | --- | --- |
+| `public/terrain/israel.bin` | Int16 LE decimetres, 811 × 381 cells, 0.005° step from 33.45° N / 34.1° E | AWS Terrain Tiles (Mapzen/Tilezen "joerd", terrarium encoding, zoom 10), mosaicked from SRTM, ETOPO1 and others. Open data; attribution: "Terrain Tiles: Mapzen, SRTM (NASA/USGS), ETOPO1 (NOAA), GMTED (USGS)" per the joerd attribution list. Built by `scripts/build-relief.ts country` |
+| `public/terrain/places/<id>.bin` | 201 × 201 cells at 20 m, one per place (55) | Same tiles at zoom 13. Built by `scripts/build-relief.ts places` |
+| `src/data/relief-meta.json` | Grid specs plus each place's centre, min and max height | Generated with the patches |
+| `src/data/zones.ts` → `RAIN_STATIONS` | 145 stations, yearly rain 1991–2020 | Israel Meteorological Service (IMS) climate normals, transcribed by the level designer. Values only; no IMS material is shipped |
+| `public/thumbs/case-N.jpg` | Album thumbnails, 400 × 249 | Real HUD-free frames from the game, captured with `scripts/drive.mjs` |
+
+The tile cache (`assets-src/tiles-cache/`) and the raw Tripo downloads (`assets-src/tripo/`) are gitignored. Re-running `npm run relief` rebuilds every grid from the public tiles.

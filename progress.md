@@ -15,3 +15,17 @@
 - **17:20** Pure model (`src/model/`): relief readers, zone model (rock/belt/rain IDW/landforms), biome rule, tool readings, solver (feasible cells → geometric-median pin), scoring, case session (charges, hints, rules), sun position. Engine: postcard world (near 3 m mesh + 20 m patch + 90 km horizon), ranger controller with gaze-to-notice, kite camera, lookout; tabletop pin map with swooping reveal; RTL HUD matching the mockups.
 - Decision (no-duplicate rule): rain is only ever *measured* (±20 % gauge), never set; no transect probe (IsraelRainTransectLab). Settlement density is seen from the kite, never painted or toggled.
 - Decision: Tripo's quadruped rig ships only a walk clip, so יעלי's idle/taunt/sulk/leap are procedural on the real head/spine/tail bones (`src/scene/ibex.ts`).
+- **17:30–17:45** The level designer finished: 55 places, 145 IMS stations, 19 cities, and 18 cases in 4 worlds. Culture signs match `CITIES`, and coastal polygons follow the coast. The suite is green at 166/166, including "the intended clues give 3★" and "constant pins never reach 2★" for every case. Places the tools honestly cannot separate (Safed vs Jerusalem, north vs south Dead Sea shore, Bat Yam vs Ashdod) are documented in LEVELS.md, with star radii set to match.
+- **17:45–18:30** Visual pass on real captures:
+  - Basalt shards fixed (vertex jitter now hashes by position).
+  - Tripo dressing placed per place: basalt boulders and field walls, rocks tinted per rock type, acacia, date palm, olive and cypress, terrace walls, fan palms, church tower, minaret, market stalls, houses, and the lookout tower.
+  - Six lake and coast places moved off the SRTM water surface onto dry shore, and the lake surface now shelves.
+  - Ramon moved to the real rim edge; desert slopes get strata bands and the makhtesh floor gets a warm tint.
+  - The lookout deck view is clear, and the opening views are kept clear.
+  - Map framing and vignette; the reveal camera adapts near the north edge.
+  - The ibex is closer at the start; dense towns pack tighter.
+- **18:30** `LEVELS.md` verified-solution lines are filled by `scripts/verify-levels.ts`. Album thumbnails are real frames. `docs/VISUAL_REVIEW.md` compares the 4 mockups with real captures in `docs/screenshots/`.
+- **18:40** `npm run build`:
+  - Sizes: JS 812 kB (212 kB gzip), CSS 23 kB, fonts ~0.4 MB, models 12 MB (loaded per postcard), relief 7.5 MB (country 0.6 MB plus one 80 kB patch per postcard).
+  - Speed: 60 fps (vsync) on an M2 Max in Playwright Chromium, 51–428 draw calls, about 2.2M triangles.
+  - Added adaptive resolution: the pixel ratio steps down to 0.75 if exploring stays under ~32 fps for 2 s.
