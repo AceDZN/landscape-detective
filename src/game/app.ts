@@ -17,6 +17,7 @@ import { PinMap, llToMap } from '../scene/pinmap';
 import { PostcardWorld } from '../scene/world';
 import { Sfx } from './audio';
 import { Progress } from './progress';
+import { parseLevelParam, postToHost } from '../host';
 
 type Mode = 'loading' | 'album' | 'intro' | 'explore' | 'map' | 'reveal' | 'caseEnd';
 
@@ -54,6 +55,8 @@ export class App {
   explorer: Explorer | null = null;
   paused = false;
   private pauseEl: HTMLElement | null = null;
+  private hostReadySent = false;
+  private caseStartedAt = 0;
   reduced = false;
   time = 0;
   private lastReveal: PinResult | null = null;
@@ -108,7 +111,13 @@ export class App {
     this.renderer.domElement.addEventListener('webglcontextrestored', () => this.session && this.mode === 'explore' && this.loadPostcard(this.session.idx));
     window.addEventListener('blur', () => this.mode === 'explore' && !this.paused && this.pause(true));
     this.exposeTestHooks();
-    this.showAlbum();
+    // Workbook deep link: ?level=N opens authored case N straight away, even if the save has it locked.
+    const deep = parseLevelParam(window.location.search, CASES.length);
+    if (deep !== null) this.startCase(CASES[deep]);
+    else {
+      this.showAlbum();
+      requestAnimationFrame(() => this.hostReady());
+    }
     let last = performance.now();
     // Adaptive resolution for slow school laptops: if frames stay slow while exploring, render fewer pixels.
     let slow = 0, ema = 1 / 60;
@@ -319,6 +328,15 @@ export class App {
     this.buildExploreHud();
     const amb = pc.night ? (place.landforms.includes('sea_west') ? 'sea' : 'night') : place.culture.length > 2 ? 'town' : this.world.waterLevel === 0 ? 'sea' : 'wind';
     this.sfx.ambience(amb);
+    if (idx === 0) {
+      this.render();
+      this.hostReady();
+      // The daily case (id 0) is generated content: it posts nothing.
+      if (s.def.id >= 1) {
+        this.caseStartedAt = performance.now();
+        postToHost({ type: 'level-start', level: s.def.id });
+      }
+    }
     const first = idx === 0 ? s.def.introHe : pc.stampHe ?? 'גלויה חדשה! איפה אנחנו הפעם?';
     this.radio(first, 6);
     if (s.def.id === 1 && idx === 0) {
@@ -329,6 +347,13 @@ export class App {
           this.radio(`טיפ: גררו כדי להסתכל מסביב, ${touch ? 'הקישו על הקרקע כדי ללכת' : 'לחצו על הקרקע כדי ללכת (או <bdi>WASD</bdi>)'}. הסתכלו על דברים מעניינים — הם נכתבים במחברת.`, 8);
       }, 6500);
     }
+  }
+
+  /** Tell the workbook player the first playable scene is on screen (once). */
+  private hostReady() {
+    if (this.hostReadySent) return;
+    this.hostReadySent = true;
+    postToHost({ type: 'ready' });
   }
 
   private clearWorld() {
@@ -624,6 +649,8 @@ export class App {
     const rule = !res.ruleOk ? `<p>⚠️ ${def.rule === 'order_west_east' ? 'הסדר ממערב למזרח התהפך — לכן לכל היותר כוכב אחד.' : 'אחת הסיכות נפלה בצד הלא נכון של קו פרשת המים — לכן לכל היותר כוכב אחד.'}</p>` : '';
     const hint = s.hintsUsed ? '<p>💡 השתמשתם ברמז — כוכב אחד ירד.</p>' : '';
     const bonus = res.bonus ? `<p>🎒 ${res.chargesLeft === 1 ? 'חסכתם מטען כלי אחד' : `חסכתם <bdi>${res.chargesLeft}</bdi> מטעני כלים`} — תג חוקר חסכוני!</p>` : '';
+    // A case counts as won with at least one star; replays post again, as in the other workbook games.
+    if (def.id >= 1 && res.stars >= 1) postToHost({ type: 'level-complete', level: def.id, stars: res.stars, durationMs: Math.round(performance.now() - this.caseStartedAt) });
     const nextCase = CASES.find((c) => c.id === def.id + 1);
     const finale = def.id === 18 && res.stars > 0 ? '<p>🐐 תפסתם את יעלי! האלבום חזר לרשות הטבע. תודה, חוקר נוף.</p>' : '';
     this.hud.innerHTML = '';

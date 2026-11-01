@@ -24,7 +24,7 @@
   - The lookout deck view is clear, and the opening views are kept clear.
   - Map framing and vignette; the reveal camera adapts near the north edge.
   - The ibex is closer at the start; dense towns pack tighter.
-- **18:30** `LEVELS.md` verified-solution lines are filled by `scripts/verify-levels.ts`. Album thumbnails are real frames. `docs/VISUAL_REVIEW.md` compares the 4 mockups with real captures in `docs/screenshots/`.
+- **18:30** `LEVELS.md` verified-solution lines are filled by `scripts/verify-levels.ts`. Album thumbnails are real frames. `docs/VISUAL_REVIEW.md` compares the 4 mockups with real captures (kept local in the git-ignored `scratch/screenshots/`; not committed).
 - **18:40** `npm run build`:
   - Sizes: JS 812 kB (212 kB gzip), CSS 23 kB, fonts ~0.4 MB, models 12 MB (loaded per postcard), relief 7.5 MB (country 0.6 MB plus one 80 kB patch per postcard).
   - Speed: 60 fps (vsync) on an M2 Max in Playwright Chromium, 51–428 draw calls, about 2.2M triangles.

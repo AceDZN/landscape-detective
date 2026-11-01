@@ -9,7 +9,8 @@
     "preview": "vite preview --host 0.0.0.0 --port 4244 --strictPort",
     "test": "tsx --test tests/*.test.ts",
     "relief": "node scripts/build-relief.mjs",
-    "shots": "node scripts/drive.mjs"
+    "shots": "node scripts/drive.mjs",
+    "test:embed": "node tests/host-embed.mjs"
   },
   "dependencies": {
     "@fontsource/rubik": "5.3.0",

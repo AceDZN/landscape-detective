@@ -1,5 +1,8 @@
 import './style.css';
 import { App } from './game/app';
+import { initHost } from './host';
+
+initHost('landscape-detective');
 
 const root = document.getElementById('app')!;
 const app = new App(root);

@@ -50,10 +50,14 @@ North is always up on the map and east is to the right, even though the UI reads
 - Hebrew RTL HUD after the gameplay mockups in `docs/visual-targets/`; mute, pause and reduced-motion toggles; progress and anonymous learning events in localStorage only.
 - `window.render_game_to_text()` and a deterministic `window.advanceTime(ms)`.
 
+## Workbook embed
+
+The game runs inside the workbook geography-games player as an iframe. `src/host.ts` (shared by every workbook game) sends `ready`, `level-start` and `level-complete` to a `*.workbook.co.il` parent, and posts nothing when the game runs on its own. `?level=N` (1–18) opens case N directly. The catalog entry and poster are in `workbook/`. `npm run test:embed` (dev server running) checks the message order in a real iframe.
+
 ## Deploying to Vercel (not deployed)
 
 It's a static site with a relative base: Framework preset "Vite", build command `npm run build`, output directory `dist`. Nothing is fetched at runtime from other hosts.
 
 ## Docs
 
-`GAME_IDENTITY.md` (incl. the "Not like" table) · `CURRICULUM.md` · `LEVELS.md` · `ASSETS.md` · `PLAYTEST.md` · `progress.md` · `docs/VISUAL_REVIEW.md` · `docs/visual-targets/` · `docs/screenshots/`
+`GAME_IDENTITY.md` (incl. the "Not like" table) · `CURRICULUM.md` · `LEVELS.md` · `ASSETS.md` · `PLAYTEST.md` · `progress.md` · `docs/VISUAL_REVIEW.md` · `docs/visual-targets/` · `workbook/` (catalog entry and poster for the workbook games app)

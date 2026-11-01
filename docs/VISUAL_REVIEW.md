@@ -1,5 +1,7 @@
 # Visual review — real captures vs. the gameplay mockups
 
+> The real captures are local-only: they live in the git-ignored `scratch/screenshots/` and are not committed (screenshots never go in the repo). Each one can be regenerated with the command next to it, using `scripts/drive.mjs` against the dev server. The mockups in `docs/visual-targets/` are design assets and are committed.
+
 The mockups in `docs/visual-targets/` are the art direction. Every capture below is a real frame from the running game: Playwright drives `scripts/drive.mjs` against the dev server at 1280×720, with deterministic time (`window.advanceTime`). Nothing is painted over. To regenerate, run the commands in the "Capture" column.
 
 Verdict per target: **match** means the composition, HUD and readability goals are met. **gap** means the difference is known and listed honestly.
@@ -8,9 +10,9 @@ Verdict per target: **match** means the composition, HUD and readability goals a
 
 | Target | Real |
 |---|---|
-| ![](visual-targets/01-first-30s.png) | ![](screenshots/01-first-30s.png) |
+| ![](visual-targets/01-first-30s.png) | ![](../scratch/screenshots/01-first-30s.png) |
 
-Capture: `node scripts/drive.mjs "eval:__ld.startCase(__ld_cases[0])" waitfor:explore adv:4000 shot:docs/screenshots/01-first-30s.png`
+Capture: `node scripts/drive.mjs "eval:__ld.startCase(__ld_cases[0])" waitfor:explore adv:4000 shot:scratch/screenshots/01-first-30s.png`
 
 - **Match:**
   - Deckle-edged postcard frame and stamp.
@@ -32,7 +34,7 @@ Capture: `node scripts/drive.mjs "eval:__ld.startCase(__ld_cases[0])" waitfor:ex
 
 | Target | Real (swing) | Real (reading) |
 |---|---|---|
-| ![](visual-targets/02-core-golan.png) | ![](screenshots/02-core-golan-hammer.png) | ![](screenshots/02b-golan-notebook.png) |
+| ![](visual-targets/02-core-golan.png) | ![](../scratch/screenshots/02-core-golan-hammer.png) | ![](../scratch/screenshots/02b-golan-notebook.png) |
 
 Capture: `… startCase(__ld_cases[3]) … key:1 adv:1600 shot:…`, then `adv:2600 wait:500 shot:…` for the reading.
 
@@ -52,7 +54,7 @@ Capture: `… startCase(__ld_cases[3]) … key:1 adv:1600 shot:…`, then `adv:2
 
 | Target | Real (map) | Real (reveal) |
 |---|---|---|
-| ![](visual-targets/03-pin-reveal.png) | ![](screenshots/03a-pin-map.png) | ![](screenshots/03b-pin-reveal.png) |
+| ![](visual-targets/03-pin-reveal.png) | ![](../scratch/screenshots/03a-pin-map.png) | ![](../scratch/screenshots/03b-pin-reveal.png) |
 
 Capture: `… key:m waitfor:map adv:1500 shot:… "pinat:32.95,35.3" adv:400 key:Enter adv:9000 wait:2000 shot:…`
 
@@ -75,7 +77,7 @@ Capture: `… key:m waitfor:map adv:1500 shot:… "pinat:32.95,35.3" adv:400 key
 
 | Target | Real |
 |---|---|
-| ![](visual-targets/04-level-select.png) | ![](screenshots/04-level-select.png) |
+| ![](visual-targets/04-level-select.png) | ![](../scratch/screenshots/04-level-select.png) |
 
 - **Match:**
   - Four world pages, each with a coloured tab.
@@ -92,9 +94,9 @@ Capture: `… key:m waitfor:map adv:1500 shot:… "pinat:32.95,35.3" adv:400 key
 
 | | |
 |---|---|
-| Lookout over the sea, Apollonia ![](screenshots/05-lookout-sea-west.png) | Night card: only the sea is heard ![](screenshots/06-night-card.png) |
-| Makhtesh Ramon from the rim lookout (floor tint and strata) ![](screenshots/07-ramon-from-lookout.png) | Dead Sea shore, Ein Gedi ![](screenshots/08-dead-sea-shore.png) |
-| Nazareth from the kite camera (dense town, minaret, market) ![](screenshots/09-nazareth-kite.png) | Intro card ![](screenshots/00-intro-card.png) |
+| Lookout over the sea, Apollonia ![](../scratch/screenshots/05-lookout-sea-west.png) | Night card: only the sea is heard ![](../scratch/screenshots/06-night-card.png) |
+| Makhtesh Ramon from the rim lookout (floor tint and strata) ![](../scratch/screenshots/07-ramon-from-lookout.png) | Dead Sea shore, Ein Gedi ![](../scratch/screenshots/08-dead-sea-shore.png) |
+| Nazareth from the kite camera (dense town, minaret, market) ![](../scratch/screenshots/09-nazareth-kite.png) | Intro card ![](../scratch/screenshots/00-intro-card.png) |
 
 ## Fixes made during this review
 

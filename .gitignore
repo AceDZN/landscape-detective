@@ -7,3 +7,7 @@ playwright-report
 scratch/
 assets-src/tiles-cache/
 assets-src/tripo/
+
+# Screenshots never go in the repo; design mockups are the one exception.
+*.png
+!docs/visual-targets/*.png

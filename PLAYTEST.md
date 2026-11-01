@@ -30,7 +30,7 @@ It played case 1 from the album and cases 3, 4, 11, 15 (night), 16 and 18 (no hi
 | 2 | H, M and Enter still worked while paused (could spend a hint or commit a pin) | major | **Fixed**: while the pause card is up, only Esc or P reach the game; Enter activates the focused "ממשיכים" |
 | 3 | You couldn't play keyboard-only: no way to pin without a mouse, and focus was lost after cards | major | **Fixed**: arrows move the pin (Shift for big steps), Enter commits; cards focus their main button; the album focuses the next case |
 | 4 | Akko revealed as "אזור ההר" | major | **Fixed in data**: the coastal-plain polygons ran east of Akko's peninsula. Akko is now on the coastal plain and on kurkar, which is correct for its ridge, and the zone-model test agrees |
-| 5 | Phone map crowded: the notebook over the Negev, the tip over the title, commit over back | major | **Fixed**: phone map framing pulls back and shifts; the notebook, commit and tip are re-laid out (`docs/screenshots/12-phone-portrait.png`) |
+| 5 | Phone map crowded: the notebook over the Negev, the tip over the title, commit over back | major | **Fixed**: phone map framing pulls back and shifts; the notebook, commit and tip are re-laid out (local capture `scratch/screenshots/12-phone-portrait.png`) |
 | 6 | Case 1's tip fired in other cases (an untied 6.5 s timer) and said WASD on touch | minor | **Fixed**: tied to the same postcard load; the touch wording says to tap |
 | 7 | No message when daylight ran out (the map replaced the message line) | minor | **Fixed**: the map's tip line doubles as the message line |
 | 8 | A hint in the tutorial cost a star | minor | **Fixed**: free in the tutorial (the label says so); there is a test |
